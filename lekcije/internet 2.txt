@@ -1,0 +1,8 @@
+chrome daje operativnom sistemu http paket, i kaze mu da ga posalje kao tcp paket
+operativni sistem onda dalje pakuje u ip i fizicki paket i prosledjuje mreznoj kartici
+mrezna kartica dalje salje ruteru itd iobrnuto
+
+operativni sistem komunicira sa fizickim uredjajima putem drajvera
+drajveri obezbedjuju funkcije putem kojih operativni sistem moze da daje komande uredjajima
+npr. "posalji ovaj paket" za mreznu karticu ili "nacrtaj ovu geometriju" za graficku karticu
+ili "procitaj mi sadrzaj na ovoj adresi" za hard disk

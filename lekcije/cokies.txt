@@ -1,0 +1,10 @@
+cookie: __cfduid=def595ab2b197e67295f4fb9a29f2408c1532351225; PHPSESSID=e752737ba81a46724143d1cfafc9d9f0; _ga=GA1.2.2110502400.1532351231; _gid=GA1.2.259336546.1532351231
+
+cookie je jedan recnik
+PHPSESSID=e752737ba81a46724143d1cfafc9d9f0
+PHPSESSID je kljuc, e7... je vrednost, ali je ova vrednost u stvari kljuc na serveru
+server u sebi ima recnik:
+
+info["e725.."] = <neki podaci o korisniku>
+
+kad se korisnik uloguje, server u ovaj svoj recnik stavi npr. korisnik.ulogovan = true

@@ -1,0 +1,109 @@
+1) Osnovni, fizicki sloj
+svaki uredjaj na svetu ima jedinstvenu fizicku adresu (zove MAC adresa)
+svic sluzi da poveze na fizickom nivou vise uredjaja odjednom
+
+komunikacija izmedju dva uredjaja ide po paketima
+svaki paket ima neki sadrzaj, i neke dodatne podatke: MAC adresa posiljaoca, i MAC adresa primaoca
+svic prvi put ne zna kome da posalje paket, i zbog toga posalje svima (samo prvi put)
+
+2) Drugi, IP sloj
+
+svaki uredjaj ima i IP adresu
+primer ip adrese: 192.168.88.11
+na IP sloju se koriste ruteri
+
+i na ovom sloju postoje paketi:
+ip paket ima ip adresu posiljaoca i primaoca, ali i ceo mac paket
+
+xxxxxxx
+
+<mac1><mac2>xxxxxxx
+<ip-primoaoca><ip-posiljalaca><mac-primaoca><mac-primaoca>xxxxxxx 
+
+svaki paket mora fizicki da se posalje, zato se podaci prvo zapakuju u fizicki paket
+posto zelimo da paket saljemo preko interneta, onda ga dodatno zapakujemo u IP paket
+
+ruter ima tabelu ip adresa. ruter ili zna gde da posalje paket, ili ima ip adresu nekog ko zna (npr. provajder)
+na putu moze da ima dosta rutera koji ne znaju gde da posalju ip paket, ali na kraju ce neki uvek znati
+
+ip paketi nemaju garanciju da ce ikada stici
+takodje, nema garancije da ce stici istim redosledom kojim su poslati
+takodje, moze isti paket da stigne vise puta
+
+3) Treci, TCP sloj
+
+na trecem sloju se isto komunicira ip adresama, ali se dodaje i port
+portovi idu od 1 do 65000
+http port je npr 80
+https port je npr 443
+
+ip adrese su vezane za kompjuter, portovi su vezani za aplikaciju
+tcp paket ima ceo ip paket + port posiljaoca + port primaoca
+
+primer:
+192.168.88.11:34358 (posiljalac) 88.78.123.32:400 (primalac) (mac adrese) .... podaci
+(ip adresa:port) - (ip adresa:port) ...
+na osnovu porta sistem zna kojoj aplikaciji (browser, mail, igrica) da prosledi paket
+
+najbitnija stvar za tcp: za razliku od ip paket, tcp paketi garantovano stizu, ne mogu da se izgube, i ne mogu da stignu pogresnim redosledom
+svaki paket ima sequence number, i primalac ima niz u kome cuva odredjeni broj paketa pre nego sto stignu redom
+paket moze da se izgubi, ali ga posiljalac onda posalje ponovo
+
+tcp i visi slojevi su korisni programerima
+u programskim jezicima postoji klasa Socket, koja sluzi za komunikaciju na TCP nivou
+klijent je onaj ko zapocinje tcp komunikaciju, server je onaj koji prima
+
+socket klasa sve radi automatski: samo joj se da adresa i port servera, i ona se poveze sa njim
+posle se u socket moze upisivati bajt po bajt, ili stringovi, ili stagod
+socket ce sam automatski to da podeli u pakete, da ih salje, prima i sve
+
+4) Cetvrti, aplikacioni sloj
+
+Najbitniji protokol je HTTP
+najosnovniji primer HTTP paketa:
+
+GET /Content.html HTTP/1.1
+Host: pointofdeparture.org
+
+- GET: tip zahteva (get, post, put, patch, delete, itd)
+get samo pristupa necemu, post salje podatke
+
+- posle GET ide putanja na sajtu (koja stranica se zahteva)
+
+- HTTP/1.1 je uvek prisutan
+
+- Host: adresa sajta
+na istoj masini moze da ima vise sajtova, pa host kaze koji se trazi
+npr. www.bakir.com i www.curic.com (a masina ima samo jednu ip adresu)
+
+http paket:
+GET /Content.html HTTP/1.1
+Host: pointofdeparture.org (ovo je sve jedan niz bajtova)
+
+http paket se upakuje u tcp paket, tcp paket u ip paket, ip paket u fizicki paket
+fizicki paket se posalje npr svicu, onda ga on posalje ruteru
+ruter nadje gde paket treba da ode
+na kraju paket stigne do servera na kom je sajt
+raspakuje se fizicki paket, pa ip paket, pa tcp paket, i do aplikacije dodje onaj niz 'GET ...'
+aplikacija onda procita taj niz i odluci sta ce da radi
+
+primer HTTP rezultata:
+
+HTTP/1.1 200 OK
+Content-Length: 1326
+
+<ovde sad ide 1326 bajtova HTML-a>
+
+200 je status ok, 404 je greska (not found)
+
+developer tools se ukljucuju sa F12, i onda se ide na Network, pa se refreshuje stranica
+
+4) Jos jedan sloj na aplikacionom sloju je DNS
+
+kako kompjuter zna da nadje ip adresu od npr. www.facebook.com
+
+za to sluzi DNS protokol
+slicno kao obicno rutiranje:
+posalje se ruteru DNS zahtev i pita se "koja je ip adresa od www.facebook.com"
+ruter ako ne zna, ide kod provajdera, itd
+na kraju, ako niko ne zna odgovor, stize se do glavnih DNS servera, koji sigurno znaju

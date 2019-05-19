@@ -1,0 +1,173 @@
+objekat je nesto sto je sacuvano u memoriji
+
+
+bit: 0 ili 1
+bajt: 8 bita
+
+bajt:
+00110010
+
+najmanji bajt:
+00000000
+
+najveci bajt:
+11111111
+
+1111 = 1 * 2^3 + 1 * 2^2
+
+
+12314 = 1 * 10^4 + 2 * 10^3 + 3 * 10^2 + 1 * 10 + 4
+
+11010 = 1 * 2^4 + 1 * 2^3 + 0 * 2^2+ 1 * 2^1 + 0
+
+u binarnom sistemu osnova je 2
+
+11111111 = 255
+
+jednim bajtom mogu da se predstave svi brojevi od 0 do 255
+
+RAM memorija:
+
+0: ...
+1: ...
+
+
+
+8GB: ...
+
+bakir = "bakir"
+bakir je promenljiva na adresi 4810
+
+4810: b (01100010)
+4811: a
+4812: k
+4813: i
+4814: r
+
+x = 14 (izmedju 0 i 255, znaci zauzima jedan bajt)
+x = 800 (to je preko 255 bita, znaci treba mu jos jedan bajt, ukupno dva)
+x = 80000 (najveci broj koji staje u dva bajta je 11111111 11111111 = 2^16-1 = 65535)
+znaci, 80000 staje u cetiri bajta
+
+c++:
+byte x = 16
+short x = 800
+int x = 80000 (0 do 4 milijarde (otrpilike))
+
+ovo su brojevi bez decimala
+sa decimalama:
+
+x = 3.52 (float ili double)
+ima dva tipa: 4 bajta (manju preciznost) ili 8 bajtova (veca preciznost)
+
+
+
+class Complex:
+  def __init__(self, real, imaginary):
+	self.real = real
+	self.imaginary = imaginary
+	self.obicanbroj = 123356
+3.24+4.82i
+
+
+memorija:
+complex u sebi ima dva objekta od po 8 bajtova (dva float broja)
+
+c = Complex(23.3, 435.3)
+
+c je recimo na adresi 8021 u memoriji:
+
+8021: ovde pocinje self.real
+8022:
+8023:
+...
+8029: ovde pocinje self.imaginary
+...
+8036: ovde se zavrsava self
+
+
+objekat complex u self ima real i imaginary, i svi njegovi delovi su spojeni u memoriji
+svaki deo objekta zauzima onoliko memorije koliko je potrebno za njegov tip
+(npr 8 za float, 4 za obicni broj, 1 za bool (true/false))
+
+true/false u teoriji zahtevaju samo 1 bit, ali memoriji moze da se pristupa samo u bajtovima
+
+__init__ samo zauzme onoliko memorije koliko je potrebno, i postavi promenjlive u toj memoriji na njihove vrednosti
+
+Postoji fizicka RAM memorija, i postoji virtuelna. Svaki program pristupa virtuelnoj memoriji, a operativni sistem to mapira na pravu memoriju.
+Ako nema dovoljno fizicke memorije, onda operativni sistem moze da privremeno izbaci sadrzaj memorije nekog programa na hard disk, i da vrati nazad u memoriju kad bude potrebno.
+
+Procesor radi samo jednu instrukciju u jednom trenutku. U jednom trenutku se izvrsava samo jedan program, a operativni sistem pusta svaki program da radi po nekoliko milisekundi, pa onda pusti malo sledeci, itd.
+Ako procesor ima n jezgara, onda n programa moze istovremeno da radi (slicno kao da ima n razlicitih procesora).
+
+
+
+kompajler prevodi komande programskih jezika u jezik koji procesor razume (asembler, tj. masinske instrukcije)
+
+x = (2*y + 1)*z
+
+kako se ovo (otprilike) prevodi procesoru:
+
+load y
+mul 2
+add 1
+mul z
+store x
+
+procesor ima registre (najcesce 16 ili 32)
+registri su 4 ili 8 bajtove (u zavisnosti od procesora)
+registri su mnogo brzi od memorije, ali je problem sto ih ima malo
+ti nikad ne vidis registre, time se bavi kompajler
+
+neki od registara su: eax, ebx, ecx, edx
+
+load eax, y	// ucitaj y u registar eax
+mul eax, 2	// pomnozi sadrzaj registra eax sa 2 i vrati rezultat u eax
+add eax, 1	// itd
+load ebx, z
+mul eax, ebx	// ovde mnozimo dva registra, jer ne mozemo dve lokacije u memoriji, ali mozemo dva registra jer procesor to razume
+store eax, x
+
+procesor radi samo jednostavne instrukcije. npr, ne moze da pristupi dve razlite promenljive u memoriji u jednoj instrukciji, nego mora prvo da ih ucita u registre
+procesor komplikovane instrukcije podeli na dosta malih delova, i radi sa delovima u registrima, i onda kombinuje rezultate i po potrebi snima u nazad u memoriju
+
+procesor nema petlje, ima samo jump instrukcije
+npr:
+
+jne - jump if not equal (idi na neku instrukciju ako rezultat prethodne nije 0)
+je - jump if equal (idi na neku instrukciju ako rezultat prethodne je 0)
+
+if(x > y):
+	x = 2
+else:
+	x = 3
+y = 10
+
+za procesor ne postoji if
+
+kako to procesor radi:
+
+1) load eax, x
+2) load ebx, y
+3) sub eax, ebx
+4) jg 7 - jump if greater than, dakle ako je razultat prethdne operacije veci od 0
+5) store x, 3 (ovde smo prvo stavili else kod, ali moze i suprotno)
+6) jmp 8
+7) store x, 2
+8) store y, 10
+
+
+ima nekoliko nivoa memorije
+
+hard disk je najveci, ali najsporiji
+ram memorija je manja, ali mnogo brza od hard diska
+ali i dalje je dosta spora
+zato procesori imaju najcesce tri nivo cache memorije
+od 64K pa do 3MB
+najbrzi su registri, ali ih ima samo 16, i mali su (po 8KB)
+
+procesor ne dohvati samo 1 bajt iz memorije, nego najcesce uzme sve u blizini i popuni cache maksimalno (najcesce 64KB)
+
+exe fajl je samo prevedn program na procesorski jezik (masinske instrukcije)
+jednom kad se program prevede, ne moze vise da se vidi originalni kod
+izgube se sva imena funkcija, klasa, i promenljivih

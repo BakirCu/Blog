@@ -1,0 +1,18 @@
+mac paket:
+
+<mac primaoca><mac posiljaoca><mac podaci>
+
+ip paket (on se stavlja u mac podatke):
+<ip primaoca><ip posiljaoca><ip podaci>
+
+tcp paket (on se stavlja u ip podatke):
+<port primaoca><port posiljaoca><tcp podaci>
+
+http paket (stavlja se u tcp podatke):
+GET / HTTP/1.1\r\nHost: www.google.com
+
+<mac primaoca><mac posiljaoca><ip primaoca><ip posiljaoca><port primaoca><port posiljalaca><GET / HTTP/1.1\r\nHost: www.google.com
+
+svit zna da raspakuje fizicki paket, ruter zna da raspakuje ip paket
+operativni sistem raspakuje tcp pakete
+aplikacija raspakuje sve iznad
