@@ -1,12 +1,13 @@
 from twisted.web import server, resource
 from twisted.internet import reactor
+from storage import Storage
 
 
 class MojSajt(resource.Resource):
     isLeaf = True
 
     def __init__(self):
-        self.values = {}
+        self.values = Storage()
 
     def render_GET(self, request):
         request.setHeader("Content-Type", "text/html")
@@ -32,13 +33,13 @@ class MojSajt(resource.Resource):
             # proveris da li je uopste "bakir_kljuc"
             # u request.args (dict baca izuzetak ako ga nema)
 
-            self.values[key] = value
+            self.values.add(key, value)
             return "Uspesno ste dodali kljuc {} sa vrednoscu {}!".format(key, value).encode('utf-8')
         elif request.path == b"/vrati_vrednost":
             key = request.args[b"moj_kljuc"][0].decode('UTF-8')
+            value = self.values.get(key)
 
-            if key in self.values:
-                value = self.values[key]
+            if value:
                 return "Vrednost za kljuc {} je: {}".format(key, value).encode('utf-8')
             else:
                 return "Kljuc {} ne postoji".format(key).encode('utf-8')
