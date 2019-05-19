@@ -15,6 +15,14 @@ class MojSajt(resource.Resource):
             with open('index.html', 'r') as file:
                 data = file.read()
                 return data.encode('utf-8')
+        elif request.path == b"/add":
+            with open('add.html', 'r') as file:
+                data = file.read()
+                return data.encode('utf-8')
+        elif request.path == b"/get":
+            with open('get.html', 'r') as file:
+                data = file.read()
+                return data.encode('utf-8')
         elif request.path == b"/neka_putanja":
             key = request.args[b"bakir_kljuc"][0].decode('UTF-8')
             value = request.args[b"bakir_vrednost"][0].decode('UTF-8')
