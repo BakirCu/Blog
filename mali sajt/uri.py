@@ -17,6 +17,7 @@ def create_dict(uri_str, index):
         key, index = create_key_value(uri_str, index, '=')
         value, index = create_key_value(uri_str, index + 1, '&')
         args[key] = value
+            args[key].append(value)
         index += 1
     return args
 
@@ -40,7 +41,7 @@ def main():
     print(uri(uri_str))
     # ('/path', {'k': '1', 'l': '2'})
 
-    uri_str = 'cm/path?fdk=121&l343=223&fsdd=324'
+    uri_str = 'cm/path?fdk=121&l343=223&fsdd=324&fdk=4'
     print(uri(uri_str))
     # ('/path', {'fdk': '121', 'l343': '223', 'fsdd': '324'})
 
