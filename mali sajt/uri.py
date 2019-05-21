@@ -16,8 +16,11 @@ def create_dict(uri_str, index):
     while index < len(uri_str):
         key, index = create_key_value(uri_str, index, '=')
         value, index = create_key_value(uri_str, index + 1, '&')
-        args[key] = value
+        if key not in args:
+            args[key] = [value]
+        else:
             args[key].append(value)
+
         index += 1
     return args
 
