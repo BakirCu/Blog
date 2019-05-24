@@ -1,12 +1,30 @@
+import mysql.connector
+from configuration import Configuration, UseDatabase
+
+config = Configuration()
+config_dict = config.get_config()
+
+
 class Storage():
-    def __init__(self):
-        self.values = {}
 
     def add(self, key, value):
-        self.values[key] = value
+        with UseDatabase(config_dict) as cursor:
+            try:
+                _SQL = '''INSERT INTO biblioteka.kljuc_vrednost(Kljuc, Vrednost)
+                        VALUES (%s, %s);'''
+                cursor.execute(_SQL, (key, value))
 
-    def get(self, key):
-        if key in self.values:
-            return self.values[key]
-        else:
-            return None
+            except mysql.connector.errors.IntegrityError:
+                return False
+            return True
+
+    def select(self, key):
+        with UseDatabase(config_dict) as cursor:
+            _SQL = '''SELECT Kljuc, Vrednost
+                            FROM biblioteka.kljuc_vrednost
+                            WHERE Kljuc = %(key)s'''
+            cursor.execute(_SQL, {'key': key})
+            users = cursor.fetchall()
+            if not users:
+                return ''
+            return users[0][1]

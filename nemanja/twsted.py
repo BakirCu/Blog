@@ -25,8 +25,7 @@ class MojSajt(resource.Resource):
         elif request.uri == b"/time":
             return ("<html>" + str(datetime.now()) + "</html>").encode('utf-8')
         elif request.path == b"/random":
-            from_num = 1
-            to_num = 10
+            request.args = {b'from': ['100'], b'to': ['200']}
 
             # http://localhost:8080/random?from=100&to=200
             # print(request.uri) -> '/random?from=100&to=200'
@@ -40,7 +39,7 @@ class MojSajt(resource.Resource):
             if b'to' in request.args:
                 to_str = request.args[b'to']
                 to_num = int(to_str[0])
-
+            print(request.args)
             return ("<html>" + str(random.randint(from_num, to_num)) + "</html>").encode('utf-8')
         else:
             return "<html><h1>Hello, unknown person!</h1></html>".encode('utf-8')

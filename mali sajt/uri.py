@@ -20,7 +20,6 @@ def create_dict(uri_str, index):
             args[key] = [value]
         else:
             args[key].append(value)
-
         index += 1
     return args
 

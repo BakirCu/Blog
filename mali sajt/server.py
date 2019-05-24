@@ -16,34 +16,33 @@ class MojSajt(resource.Resource):
             with open('index.html', 'r') as file:
                 data = file.read()
                 return data.encode('utf-8')
+
         elif request.path == b"/add":
             with open('add.html', 'r') as file:
                 data = file.read()
                 return data.encode('utf-8')
+
         elif request.path == b"/get":
             with open('get.html', 'r') as file:
                 data = file.read()
                 return data.encode('utf-8')
+
         elif request.path == b"/neka_putanja":
             key = request.args[b"bakir_kljuc"][0].decode('UTF-8')
             value = request.args[b"bakir_vrednost"][0].decode('UTF-8')
+            key_value = self.values.add(key, value)
+            if key_value:
+                return "Uspesno ste dodali kljuc {} sa vrednoscu {}!".format(key, value).encode('utf-8')
+            else:
+                return 'Kljuc {} vec postoji!'.format(key)
 
-            # PAZNJA!
-            # Ovde sam uprostio kod. Ti prvo moras da
-            # proveris da li je uopste "bakir_kljuc"
-            # u request.args (dict baca izuzetak ako ga nema)
-
-            self.values.add(key, value)
-            return "Uspesno ste dodali kljuc {} sa vrednoscu {}!".format(key, value).encode('utf-8')
         elif request.path == b"/vrati_vrednost":
             key = request.args[b"moj_kljuc"][0].decode('UTF-8')
-            value = self.values.get(key)
-
+            value = self.values.select(key)
             if value:
                 return "Vrednost za kljuc {} je: {}".format(key, value).encode('utf-8')
             else:
                 return "Kljuc {} ne postoji".format(key).encode('utf-8')
-
         return "Nepoznata putanja".encode('utf-8')
 
 
