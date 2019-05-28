@@ -1,14 +1,14 @@
 import mysql.connector
 from configuration import Configuration, UseDatabase
 
-config = Configuration()
-config_dict = config.get_config()
-
 
 class Storage():
+    def __init__(self):
+
+        self.config_dict = Configuration.get_config()
 
     def add(self, key, value):
-        with UseDatabase(config_dict) as cursor:
+        with UseDatabase(self.config_dict) as cursor:
             try:
                 _SQL = '''INSERT INTO biblioteka.kljuc_vrednost(Kljuc, Vrednost)
                         VALUES (%s, %s);'''
@@ -19,7 +19,7 @@ class Storage():
             return True
 
     def select(self, key):
-        with UseDatabase(config_dict) as cursor:
+        with UseDatabase(self.config_dict) as cursor:
             _SQL = '''SELECT Kljuc, Vrednost
                             FROM biblioteka.kljuc_vrednost
                             WHERE Kljuc = %(key)s'''
