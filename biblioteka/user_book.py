@@ -1,6 +1,8 @@
 import mysql.connector
 from configuration import Configuration
 from data_base import UseDatabase
+from errors import InputError
+import time
 
 config_dict = Configuration.get_config()
 
@@ -52,10 +54,12 @@ class UserBook:
             conn.commit()
             return numbers_book_id
         except mysql.connector.errors.IntegrityError as err:
-            print('IntegrityError: ', err)
+            full_err = 'IntegrityError: ' + str(err)
+            return full_err.encode('utf-8')
             conn.rollback()
         except mysql.connector.errors.DatabaseError as err:
-            print('DatabaseError: ', err)
+            full_err = 'DataBaseError: ' + str(err)
+            return full_err.encode('utf-8')
             conn.rollback()
         finally:
             cursor.close()
@@ -105,4 +109,22 @@ class UserBook:
             WHERE user_id = %(user_id)s'''
             cursor.execute(sql, {'user_id': user_book.user_id})
             book_id_from_user_book = cursor.fetchall()
-        return book_id_from_user_book
+        return [item[0] for item in book_id_from_user_book]
+
+    @staticmethod
+    def books_rent_limit(list_of_rented_books):
+        num_of_rented_books = str(list_of_rented_books)[2]
+        if int(num_of_rented_books) > 3:
+            raise InputError("You can't rent more than 3 books")
+
+    @staticmethod
+    def days_keeping_book(items):
+        curent_time = time.gmtime()
+        curent_date = int(time.strftime("%d", curent_time))
+        rent_date = int(items[10:12])
+        return curent_date - rent_date
+
+
+def id_compare_rent_return_book(user_book_id, book_rent_id):
+    if int(user_book_id.book_id) not in book_rent_id:
+        raise InputError("You did't take that book")

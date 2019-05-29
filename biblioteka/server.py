@@ -2,6 +2,7 @@ from twisted.web import server, resource
 from twisted.internet import reactor
 from user import User
 from book import Book
+from user_book import UserBook, id_compare_rent_return_book
 from errors import InputError
 
 
@@ -11,29 +12,16 @@ class MojSajt(resource.Resource):
 
     def render_GET(self, request):
         request.setHeader("Content-Type", "text/html")
+        route_choice_dict = {b"/": 'templates\\index.html',
+                             b"/add_user": 'templates\\add_user.html',
+                             b"/get_user": 'templates\\get_user.html',
+                             b"/add_book": 'templates\\add_book.html',
+                             b"/get_book": 'templates\\get_book.html',
+                             b"/rent_book": 'templates\\rent_book.html',
+                             b"/return_book": 'templates\\return_book.html'}
 
-        if request.path == b"/":
-            with open('templates\\index.html', 'r') as file:
-                data = file.read()
-                return data.encode('utf-8')
-
-        elif request.path == b"/add_user":
-            with open('templates\\add_user.html', 'r') as file:
-                data = file.read()
-                return data.encode('utf-8')
-
-        elif request.path == b"/get_user":
-            with open('templates\\get_user.html', 'r') as file:
-                data = file.read()
-                return data.encode('utf-8')
-
-        elif request.path == b"/add_book":
-            with open('templates\\add_book.html', 'r') as file:
-                data = file.read()
-                return data.encode('utf-8')
-
-        elif request.path == b"/get_book":
-            with open('templates\\get_book.html', 'r') as file:
+        if request.path in route_choice_dict:
+            with open(route_choice_dict[request.path], 'r') as file:
                 data = file.read()
                 return data.encode('utf-8')
 
@@ -94,6 +82,43 @@ class MojSajt(resource.Resource):
                     return 'No such file, try again'.encode('utf-8')
                 for item in items:
                     return 'Book {}, written by {} is in database'.format(item[0], item[1]).encode('utf-8')
+
+        elif request.path == b"/book_rented":
+            try:
+                user_id = request.args[b"user_id"][0].decode('UTF-8')
+                book_id = request.args[b"book_id"][0].decode('UTF-8')
+                user_book_id = UserBook(user_id, book_id)
+                list_of_rented_books = UserBook.rent_book(user_book_id)
+                UserBook.books_rent_limit(list_of_rented_books)
+            except ValueError as err:
+                full_err = str(err) + 'user id, and book id, must be integer'
+                return full_err.encode('UTF-8')
+            except InputError as err:
+                return str(err).encode('utf-8')
+            return "The book is successfully rented".encode('UTF-8')
+
+        elif request.path == b"/book_renturned":
+            try:
+                user_id = request.args[b"user_id"][0].decode('UTF-8')
+                book_id = request.args[b"book_id"][0].decode('UTF-8')
+                user_book_id = UserBook(user_id, book_id)
+                book_rent_id = UserBook.id_return_book(user_book_id)
+                id_compare_rent_return_book(user_book_id, book_rent_id)
+                items = UserBook.date_return_book(user_book_id)
+                items_str = str(items[0])
+                having_book = UserBook.days_keeping_book(items_str)
+            except ValueError as err:
+                full_err = str(err) + 'user id, and book id, must be integer'
+                return full_err.encode('UTF-8')
+            except InputError as err:
+                return str(err).encode('utf-8')
+            except IndexError as err:
+                full_err = "You didn't rent a book, try again " + str(err)
+                return full_err.encode('UTF-8')
+            full_str = 'You took book:' + \
+                items_str[2:20] + 'You have a book:' + \
+                str(having_book) + 'days'
+            return full_str.encode('UTF-8')
 
         return "Nepoznata putanja".encode('utf-8')
 
