@@ -14,12 +14,6 @@ class UserBook:
         self.book_id = book_id
 
     @staticmethod
-    def read_user_book():
-        user_id = int(input('input user id').strip())
-        book_id = int(input('input book id').strip())
-        return UserBook(user_id, book_id)
-
-    @staticmethod
     def rent_book(user_book):
         conn = mysql.connector.connect(**config_dict)
         conn.autocommit = False

@@ -120,7 +120,7 @@ class MojSajt(resource.Resource):
                 str(having_book) + 'days'
             return full_str.encode('UTF-8')
 
-        return "Nepoznata putanja".encode('utf-8')
+        return "Unknown routh".encode('utf-8')
 
 
 site = server.Site(MojSajt())

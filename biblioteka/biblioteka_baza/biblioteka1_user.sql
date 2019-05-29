@@ -28,9 +28,9 @@ CREATE TABLE `user` (
   `last_name` varchar(20) NOT NULL,
   `user_address` varchar(20) NOT NULL,
   `phone_numb` varchar(20) NOT NULL,
-  `rent_num` int(11) DEFAULT NULL,
+  `rent_num` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +39,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (0,'W','S','D','1',0),(39,'S','X','F','Q',0),(40,'s','d','w','e',0),(41,'bakir','curic','pozega','231',0),(42,'timur','nem','wq','21',0),(43,'sanjin','kurpejovic','selo','111',0),(44,'almas','h','p','7',0),(45,'ew','e','e','3',NULL),(46,'f','d','f','4',NULL),(47,'d','s','f','4',NULL),(48,'ewew','ew','ewe','43',NULL),(49,'w','ss','e','5',NULL),(50,'ewew','ew','ewe','43',NULL),(51,'ewew','ew','ewe','43',NULL),(52,'ewew','d','ewe','43',NULL),(53,'ewew','ew','ewe','43',NULL),(54,'ewew','ew','ewe','43',NULL),(55,'e','e','e','e',NULL),(56,'D','j','j','t',NULL),(57,'ewew','j','k','3',NULL),(58,'timur','cu','poz','0458473766',NULL),(59,'s','s','s','43',NULL),(60,'s','s','s','43',NULL),(61,'nemanja','mijailovic','beograd','0393487476',NULL),(62,'babsds','sdsad','dsa','4343',NULL),(63,'e','e','423','4',NULL);
+INSERT INTO `user` VALUES (0,'W','S','D','1',0),(39,'S','X','F','Q',0),(40,'s','d','w','e',3),(41,'bakir','curic','pozega','231',3),(42,'timur','nem','wq','21',2),(43,'sanjin','kurpejovic','selo','111',2),(44,'almas','h','p','7',0),(64,'zijad','kamberovic','selo','2322',1),(65,'sdfzsdfs','dfsfd','342','3423423',0),(66,'e','ewe','4441','11232',0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-28 16:40:20
+-- Dump completed on 2019-05-29 17:21:51

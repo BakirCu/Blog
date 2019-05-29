@@ -16,31 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `user_book`
+-- Table structure for table `book`
 --
 
-DROP TABLE IF EXISTS `user_book`;
+DROP TABLE IF EXISTS `book`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
-CREATE TABLE `user_book` (
-  `user_id` int(11) NOT NULL,
-  `book_id` int(11) unsigned NOT NULL,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  KEY `book_id_idx` (`book_id`),
-  KEY `user_id_idx` (`user_id`),
-  CONSTRAINT `book_id` FOREIGN KEY (`book_id`) REFERENCES `book` (`book_id`),
-  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `book` (
+  `book` varchar(20) NOT NULL,
+  `author` varchar(20) NOT NULL,
+  `book_num` int(11) unsigned NOT NULL,
+  `book_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`book_id`),
+  UNIQUE KEY `unique_index` (`book`,`author`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `user_book`
+-- Dumping data for table `book`
 --
 
-LOCK TABLES `user_book` WRITE;
-/*!40000 ALTER TABLE `user_book` DISABLE KEYS */;
-INSERT INTO `user_book` VALUES (39,20,'2019-04-12 14:27:37'),(39,20,'2019-04-12 14:30:42'),(39,20,'2019-04-12 14:31:25'),(39,20,'2019-04-12 14:53:58'),(39,20,'2019-04-12 16:28:35'),(39,21,'2019-04-12 16:28:57'),(39,20,'2019-04-12 16:31:53'),(39,20,'2019-04-12 22:06:08'),(39,20,'2019-04-12 22:06:24'),(41,22,'2019-04-12 22:06:54'),(42,23,'2019-04-15 14:18:09'),(42,23,'2019-04-15 14:20:34'),(44,23,'2019-04-15 14:26:41'),(44,23,'2019-04-15 14:28:08'),(41,22,'2019-04-15 14:54:18'),(41,22,'2019-04-15 14:55:03'),(41,22,'2019-04-15 14:55:08');
-/*!40000 ALTER TABLE `user_book` ENABLE KEYS */;
+LOCK TABLES `book` WRITE;
+/*!40000 ALTER TABLE `book` DISABLE KEYS */;
+INSERT INTO `book` VALUES ('re','re',7,0),('da','da',0,19),('bak','tik',11,20),('nwm','nemm',33,21),('qwe','we',17,22),('e','d',9,23),('krv','noz',0,24),('antigona','sofokle',48,26),('weqw','ewqeqw',43,27),('ddd','d',13,28),('nemanja','mijailovic',50,31),('3','3',3,32);
+/*!40000 ALTER TABLE `book` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -52,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-28 16:40:18
+-- Dump completed on 2019-05-29 17:21:50
