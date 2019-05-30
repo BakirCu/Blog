@@ -49,7 +49,6 @@ class MojSajt(resource.Resource):
                 return str(err).encode('UTF-8')
             else:
                 items = User.search_user_database(user_file)
-                print(items)
 
                 if not items:
                     return 'No such file, try again'.encode('UTF-8')
@@ -79,7 +78,7 @@ class MojSajt(resource.Resource):
                 full_err = str(err) + ' BOOK NUMBER must be int'
                 return full_err.encode('UTF-8')
             if book:
-                return "Book {} added!".format(book_name)
+                return '{} books {} written by {} successfuly added'.format(book_num, book_name, author_name).encode('utf-8')
 
             else:
                 return "Book {} did't added! Try again!".format(book_name)
