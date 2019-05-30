@@ -4,6 +4,7 @@ from user import User
 from book import Book
 from user_book import UserBook, id_compare_rent_return_book
 from errors import InputError
+from render import render
 
 
 class MojSajt(resource.Resource):
@@ -48,10 +49,22 @@ class MojSajt(resource.Resource):
                 return str(err).encode('UTF-8')
             else:
                 items = User.search_user_database(user_file)
+                print(items)
+
                 if not items:
                     return 'No such file, try again'.encode('UTF-8')
+
+                user_values_list = []
                 for item in items:
-                    return 'User {}, {} with id:{}  from {} is in database'.format(item[1], item[2], item[0], item[3]).encode('utf-8')
+                    item_dict = {'first': item[1],
+                                 'last': item[2],
+                                 'id': str(item[0]),
+                                 'address': item[3]}
+                    user_values_list.append(item_dict)
+                data = {'users': user_values_list}
+                with open('templates\\result_templates\\retun_users.html', 'r') as file:
+                    template = file.read()
+                return render(template, data).encode('utf-8')
 
         elif request.path == b"/book_added":
             book_name = request.args[b"book_name"][0].decode('UTF-8')
@@ -66,7 +79,8 @@ class MojSajt(resource.Resource):
                 full_err = str(err) + ' BOOK NUMBER must be int'
                 return full_err.encode('UTF-8')
             if book:
-                return '{} books {} written by {} successfuly added'.format(book_num, book_name, author_name).encode('utf-8')
+                return "Book {} added!".format(book_name)
+
             else:
                 return "Book {} did't added! Try again!".format(book_name)
 
@@ -80,8 +94,18 @@ class MojSajt(resource.Resource):
                 items = Book.search_book_database(book_file)
                 if not items:
                     return 'No such file, try again'.encode('utf-8')
+                    # OVDE POCINJE RENDER
+                user_values_list = []
                 for item in items:
-                    return 'Book {}, written by {} is in database'.format(item[0], item[1]).encode('utf-8')
+                    item_dict = {'author': item[1],
+                                 'num': str(item[2]),
+                                 'book': item[0],
+                                 }
+                    user_values_list.append(item_dict)
+                data = {'books': user_values_list}
+                with open('templates\\result_templates\\return_books.html', 'r') as file:
+                    template = file.read()
+                return render(template, data).encode('utf-8')
 
         elif request.path == b"/book_rented":
             try:
