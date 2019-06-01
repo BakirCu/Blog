@@ -23,6 +23,15 @@ class User:
         self.phone_numb = phone_numb
 
     @staticmethod
+    def read_user(request):
+        first_name = request.args[b"first_name"][0].decode('UTF-8')
+        last_name = request.args[b"last_name"][0].decode('UTF-8')
+        user_address = request.args[b"user_address"][0].decode('UTF-8')
+        phone_numb = request.args[b"phone_numb"][0].decode('UTF-8')
+
+        return User(first_name, last_name, user_address, phone_numb)
+
+    @staticmethod
     def add_user(user):
         with UseDatabase(config_dict) as cursor:
             _SQL = '''INSERT INTO user ( first_name, last_name,

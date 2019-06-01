@@ -27,19 +27,16 @@ class MojSajt(resource.Resource):
                 return data.encode('utf-8')
 
         elif request.path == b"/user_added":
-            first_name = request.args[b"first_name"][0].decode('UTF-8')
-            last_name = request.args[b"last_name"][0].decode('UTF-8')
-            user_address = request.args[b"user_address"][0].decode('UTF-8')
-            phone_numb = request.args[b"phone_numb"][0].decode('UTF-8')
+            # ovo gledas!
             try:
-                user = User(first_name, last_name, user_address, phone_numb)
+                user = User.read_user(request)
                 User.add_user(user)
             except InputError as err:
                 return str(err).encode('UTF-8')
             if user:
-                return "User {} {} successfuly added!".format(first_name, last_name).encode('utf-8')
+                return "User {} {} successfuly added!".format(user.first_name, user.last_name).encode('utf-8')
             else:
-                return "User {} don't exist!, Try again!".format(first_name)
+                return "User {} don't exist!, Try again!".format(user.first_name)
 
         elif request.path == b"/user_geted":
             user_file = request.args[b"first_last_name"][0].decode('UTF-8')
@@ -94,6 +91,7 @@ class MojSajt(resource.Resource):
                 if not items:
                     return 'No such file, try again'.encode('utf-8')
                     # OVDE POCINJE RENDER
+                print(items)
                 user_values_list = []
                 for item in items:
                     item_dict = {'author': item[1],
