@@ -13,7 +13,7 @@ class MojSajt(resource.Resource):
 
     def render_GET(self, request):
         request.setHeader("Content-Type", "text/html")
-        route_choice_dict = {b"/": 'templates\\index.html',
+        route_choice_dict = {b"/": 'templates\\base.html',
                              b"/add_user": 'templates\\add_user.html',
                              b"/get_user": 'templates\\get_user.html',
                              b"/add_book": 'templates\\add_book.html',
