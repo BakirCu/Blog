@@ -12,21 +12,27 @@ class MojSajt(resource.Resource):
     isLeaf = True
 
     def render_GET(self, request):
-        request.setHeader("Content-Type", "text/html")
-        route_choice_dict = {b"/": 'templates\\base.html',
-                             b"/add_user": 'templates\\add_user.html',
-                             b"/get_user": 'templates\\get_user.html',
-                             b"/add_book": 'templates\\add_book.html',
-                             b"/get_book": 'templates\\get_book.html',
-                             b"/rent_book": 'templates\\rent_book.html',
-                             b"/return_book": 'templates\\return_book.html'}
+
+        request.setHeader(
+            "Content-Type", "text/html")
+        route_choice_dict = {b"/": ('templates\\base.html', "text/html"),
+                             b"/add_user": ('templates\\add_user.html', "text/html"),
+                             b"/get_user": ('templates\\get_user.html', "text/html"),
+                             b"/add_book": ('templates\\add_book.html', "text/html"),
+                             b"/get_book": ('templates\\get_book.html', "text/html"),
+                             b"/rent_book": ('templates\\rent_book.html', "text/html"),
+                             b"/return_book": ('templates\\return_book.html', "text/html"),
+                             b"/get_css": ('templates\\hf.css', "text/css")}
 
         if request.path in route_choice_dict:
-            with open(route_choice_dict[request.path], 'r') as file:
+            request.setHeader(
+                "Content-Type", route_choice_dict[request.path][1])
+            with open(route_choice_dict[request.path][0], 'r') as file:
                 data = file.read()
                 return data.encode('utf-8')
 
         elif request.path == b"/user_added":
+
             # ovo gledas!
             try:
                 user = User.read_user(request)

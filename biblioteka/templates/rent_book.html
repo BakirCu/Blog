@@ -1,13 +1,31 @@
 <!DOCTYPE html>
 <html>
 
+<head>
+    <title>Djani</title>
+    <link rel="stylesheet" href="/get_css" type="text/css" />
+
+</head>
 
 <body>
+    <h1> Enter id's to rent books</h1>
     <form action="/book_rented">
-        User id: <input type="text" name="user_id"><br>
-        Book id: <input type="text" name="book_id"><br>
+        <table>
 
-        <input type="submit" value="Rent book">
+            <tr>
+                <td>User id:</td>
+                <td><input type="text" name="user_id"></td>
+
+            </tr>
+            <tr>
+                <td>Book id:</td>
+                <td><input type="text" name="book_id"></td>
+
+            </tr>
+        </table>
+        <p>When you're ready, click this button:</p>
+        <p><input type="submit" value="Rent book"></p>
+
     </form>
 </body>
 
