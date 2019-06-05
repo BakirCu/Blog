@@ -13,8 +13,6 @@ class MojSajt(resource.Resource):
 
     def render_GET(self, request):
 
-        request.setHeader(
-            "Content-Type", "text/html")
         route_choice_dict = {b"/": ('templates\\base.html', "text/html"),
                              b"/add_user": ('templates\\add_user.html', "text/html"),
                              b"/get_user": ('templates\\get_user.html', "text/html"),
@@ -22,14 +20,16 @@ class MojSajt(resource.Resource):
                              b"/get_book": ('templates\\get_book.html', "text/html"),
                              b"/rent_book": ('templates\\rent_book.html', "text/html"),
                              b"/return_book": ('templates\\return_book.html', "text/html"),
-                             b"/get_css": ('templates\\hf.css', "text/css")}
+                             b"/get_css": ('templates\\hf.css', "text/css"),
+                             b"/get_image": ('templates\\leena.jpg', "text/jpg"),
+                             b"/get_image1": ('templates\\giphy.gif', "text/jpg")}
 
         if request.path in route_choice_dict:
             request.setHeader(
                 "Content-Type", route_choice_dict[request.path][1])
-            with open(route_choice_dict[request.path][0], 'r') as file:
+            with open(route_choice_dict[request.path][0], 'rb') as file:
                 data = file.read()
-                return data.encode('utf-8')
+                return data
 
         elif request.path == b"/user_added":
 
@@ -40,7 +40,12 @@ class MojSajt(resource.Resource):
             except InputError as err:
                 return str(err).encode('UTF-8')
             if user:
-                return "User {} {} successfuly added!".format(user.first_name, user.last_name).encode('utf-8')
+                data = {'first': user.first_name,
+                        'last': user.last_name}
+                with open('templates\\result_templates\\user_added.html', 'r') as file:
+                    template = file.read()
+                return render(template, data).encode('utf-8')
+
             else:
                 return "User {} don't exist!, Try again!".format(user.first_name)
 
@@ -81,7 +86,12 @@ class MojSajt(resource.Resource):
                 full_err = str(err) + ' BOOK NUMBER must be int'
                 return full_err.encode('UTF-8')
             if book:
-                return '{} books {} written by {} successfuly added'.format(book_num, book_name, author_name).encode('utf-8')
+                data = {'book': book_name,
+                        'author': author_name,
+                        'num': str(book_num)}
+                with open('templates\\result_templates\\book_added.html', 'r') as file:
+                    template = file.read()
+                return render(template, data).encode('utf-8')
 
             else:
                 return "Book {} did't added! Try again!".format(book_name)

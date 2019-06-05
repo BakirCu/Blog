@@ -31,16 +31,16 @@ td, th {
   padding:          5px;
   text-align:       left;
 }
-.copyright {
-  font-size:        75%;
-  font-style:       italic;
-}
-.slogan {
-  font-size:        75%;
-  font-style:       italic;
-}
-.confirmentry {
-  font-weight:      600; 
+img { 
+  width: 50%;
+  height: 50%;
+  float: right;
+  margin-left:      100px;
+  margin-right:     20px; 
+  position: absolute;
+  left: 300px;
+  top: 260px;
+  
 }
 
 /*** Tables ***/
@@ -56,12 +56,15 @@ border-collapse:    collapse;
 
 td, th {
 border:             thin dotted gray;
+color:              #040803;
 }
 
 /*** Inputs ***/
 input[type=text] {
   font-size:        115%;
   width:            30em;
+  color:          #972626;
+  background-color:   #fafcff;
 }
 input[type=submit] {
   font-size:        125%;
