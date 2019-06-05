@@ -32,9 +32,11 @@ td, th {
   text-align:       left;
 }
 img { 
-  width: 50%;
-  height: 50%;
+  width: 40%;
+  height: 70%;
   float: right;
+  margin-top:       50px;
+  margin-bottom:    50px;
   margin-left:      100px;
   margin-right:     20px; 
   position: absolute;
@@ -71,4 +73,11 @@ input[type=submit] {
 }
 select {
   font-size:        125%;
+}
+.rotate90 {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
 }
