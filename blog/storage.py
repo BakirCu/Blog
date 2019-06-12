@@ -21,14 +21,20 @@ class Storage:
 
     @staticmethod
     def add_post(new_post):
-        with UseDatabase(Storage.config_dict) as cursor:
-            try:
-                _SQL = '''INSERT INTO blog.posts(title, post)
-                        VALUES (%s, %s);'''
-                cursor.execute(_SQL, (new_post.title, new_post.post))
-            except mysql.connector.errors.IntegrityError:
-                return False
-            return True
+        conn = mysql.connector.connect(**Storage.config_dict)
+        conn.autocommit = False
+        cursor = conn.cursor()
+        try:
+            _SQL = '''INSERT INTO blog.posts(title, post)
+                    VALUES (%s, %s);'''
+            cursor.execute(_SQL, (new_post.title, new_post.post))
+
+        except mysql.connector.errors.Error:
+            return False
+
+        cursor.close()
+        conn.close()
+        return True
 
     @staticmethod
     def select_all():
@@ -37,7 +43,18 @@ class Storage:
                          ORDER by time_post DESC;'''
             cursor.execute(_SQL)
             users = cursor.fetchall()
-            print(users)
             if not users:
                 return ''
             return users
+
+    @staticmethod
+    def select_post(title):
+        with UseDatabase(Storage.config_dict) as cursor:
+            _SQL = '''SELECT * FROM blog.posts
+                         WHERE title LIKE %s '''
+            cursor.execute(_SQL, (title,))
+            users = cursor.fetchall()
+            print(users)
+            if not users:
+                return ''
+            return users[0]

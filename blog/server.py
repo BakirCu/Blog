@@ -40,21 +40,40 @@ class MojSajt(resource.Resource):
         elif request.path == b"/post_added":
             try:
                 new_post = Storage.read_post(request)
-                new_post.add_post(new_post)
+                post = new_post.add_post(new_post)
+                if not post:
+                    return 'Inpit another title: this title alredy exist'.encode('UTF-8')
             except InputError as err:
                 return str(err).encode('UTF-8')
+            except Exception as err:
+                return str(err).encode('UTF-8')
+
             if new_post:
                 data = {'title': new_post.title,
                         'post': new_post.post}
                 with open('templates\\tamplate_result\\post_added.html', 'r') as file:
                     template = file.read()
                 return render(template, data).encode('utf-8')
+            else:
+                return 'somethig vent'
 
         elif request.path == b"/view_post":
             request.setHeader("Content-Type", "text/html")
             with open('templates\\view_post.html', 'r') as file:
                 template = file.read().encode('utf-8')
-                return template
+                try:
+                    title = request.args[b"post_name"][0].decode('UTF-8')
+                    post = Storage.select_post(title)
+                except Exception as err:
+                    return str(err).encode('UTF-8')
+
+                if post:
+                    data = {'title': post[1],
+                            'post': post[0],
+                            'date': str(post[2])}
+                    with open('templates\\tamplate_result\\post_selected.html', 'r') as file:
+                        template = file.read()
+                    return render(template, data).encode('utf-8')
 
         return "Unknown rout".encode('utf-8')
 

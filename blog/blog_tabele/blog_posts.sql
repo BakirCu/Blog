@@ -25,7 +25,8 @@ DROP TABLE IF EXISTS `posts`;
 CREATE TABLE `posts` (
   `post` mediumtext NOT NULL,
   `title` varchar(45) NOT NULL,
-  `time_post` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `time_post` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`title`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -35,7 +36,7 @@ CREATE TABLE `posts` (
 
 LOCK TABLES `posts` WRITE;
 /*!40000 ALTER TABLE `posts` DISABLE KEYS */;
-INSERT INTO `posts` VALUES ('scjk;lsad;lasdk;laskd;askd;lkasdai','nemanja','2019-06-12 07:20:14'),('scjk;lsad;lasdk;laskd;askd;lkasdaizxddXZXzx   ZX','timur','2019-06-12 07:22:56'),('scjk;lsad;lasdk;laskd;askd;lkasdaizxddXZXzx   ZX','timur','2019-06-12 07:25:33'),('asjkasjkldjasjdklasjdjas','bakir','2019-06-12 08:05:34'),('asjkasjkldjasjdklasjdjas','bakir','2019-06-12 08:05:53'),('qweqweqweqw','re','2019-06-12 08:07:10'),('dsadasdasdas','bakirsdasd','2019-06-12 08:11:20'),('wdsadas','bakir','2019-06-12 09:18:10');
+INSERT INTO `posts` VALUES ('sadasdasdasdas','bakir','2019-06-12 10:25:11'),('dasdasdasdas','nemanja','2019-06-12 10:25:26'),('zxcczxczxczxczx','timur','2019-06-12 10:29:49');
 /*!40000 ALTER TABLE `posts` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -48,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-12 11:32:49
+-- Dump completed on 2019-06-12 12:31:01

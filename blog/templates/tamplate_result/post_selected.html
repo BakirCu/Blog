@@ -7,22 +7,18 @@
 </head>
 
 <body>
-
     <nav>
-        <a href="#">Home</a>
+        <a href="/">Home</a>
         <a href="/new_post">New post</a>
     </nav>
-
-    {{for posts}}
-    <h1><a href="/view_post?post_name={{ title }}">Post:{{title}}</a></h1>
+    <h1>Post:{{title}}</h1>
     <br>
     <p><b>{{post}}</b> </p>
     <br>
     <p>{{date}}</p>
-    <hr>
-    {{end}}
 
 
 </body>
+
 
 </html>
