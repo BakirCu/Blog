@@ -11,7 +11,7 @@ class MojSajt(resource.Resource):
     def render_GET(self, request):
 
         route_choice_dict = {
-            b"/new_post": ('templates\\new_post.html', "text/html"),
+            b"/new_post": ('templates/new_post.html', "text/html"),
         }
 
         if request.path in route_choice_dict:
@@ -23,7 +23,7 @@ class MojSajt(resource.Resource):
 
         elif request.path == b"/":
             request.setHeader("Content-Type", "text/html")
-            with open('templates\\home.html', 'r') as file:
+            with open('templates/home.html', 'r') as file:
                 template = file.read()
                 all_posts = Storage.select_all()
                 all_posts_list = []
@@ -51,7 +51,7 @@ class MojSajt(resource.Resource):
             if new_post:
                 data = {'title': new_post.title,
                         'post': new_post.post}
-                with open('templates\\tamplate_result\\post_added.html', 'r') as file:
+                with open('templates/tamplate_result/post_added.html', 'r') as file:
                     template = file.read()
                 return render(template, data).encode('utf-8')
             else:
@@ -59,7 +59,7 @@ class MojSajt(resource.Resource):
 
         elif request.path == b"/view_post":
             request.setHeader("Content-Type", "text/html")
-            with open('templates\\view_post.html', 'r') as file:
+            with open('templates/view_post.html', 'r') as file:
                 template = file.read().encode('utf-8')
                 try:
                     title = request.args[b"post_name"][0].decode('UTF-8')
@@ -71,7 +71,7 @@ class MojSajt(resource.Resource):
                     data = {'title': post[1],
                             'post': post[0],
                             'date': str(post[2])}
-                    with open('templates\\tamplate_result\\post_selected.html', 'r') as file:
+                    with open('templates/tamplate_result/post_selected.html', 'r') as file:
                         template = file.read()
                     return render(template, data).encode('utf-8')
 
