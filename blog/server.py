@@ -1,7 +1,7 @@
 from twisted.web import server, resource
 from twisted.internet import reactor
 from storage import Storage
-from errors import InputError, raise_error
+from errors import InputError
 from render import render
 from post import Post
 
@@ -42,14 +42,14 @@ class MojSajt(resource.Resource):
                 new_post = Post.read_post(request)
                 post = Storage.add_post(new_post)
                 if not post:
-                    template, data = raise_error(
+                    template, data = InputError.raise_error(
                         'Inpit another title: this title alredy exist')
                     return render(template, data).encode('UTF-8')
             except InputError as err:
-                template, data = raise_error(str(err))
+                template, data = InputError.raise_error(str(err))
                 return render(template, data).encode('UTF-8')
             except Exception as err:
-                template, data = raise_error(str(err))
+                template, data = InputError.raise_error(str(err))
                 return render(template, data).encode('UTF-8')
 
             if new_post:
@@ -67,7 +67,7 @@ class MojSajt(resource.Resource):
                     title = request.args[b"post_name"][0].decode('UTF-8')
                     post = Storage.select_post(title)
                 except Exception as err:
-                    template, data = raise_error(str(err))
+                    template, data = InputError.raise_error(str(err))
                     return render(template, data).encode('UTF-8')
 
                 if post:
@@ -78,7 +78,7 @@ class MojSajt(resource.Resource):
                         template = file.read()
                     return render(template, data).encode('utf-8')
 
-        template, data = raise_error('Unknown rout')
+        template, data = InputError.raise_error('Unknown rout')
         return render(template, data).encode('UTF-8')
 
 
