@@ -36,7 +36,7 @@ CREATE TABLE `posts` (
 
 LOCK TABLES `posts` WRITE;
 /*!40000 ALTER TABLE `posts` DISABLE KEYS */;
-INSERT INTO `posts` VALUES ('sadasdasdasdas','bakir','2019-06-12 10:25:11'),('dasdasdasdas','nemanja','2019-06-12 10:25:26'),('zxcczxczxczxczx','timur','2019-06-12 10:29:49');
+INSERT INTO `posts` VALUES ('sadasdasdasdas','bakir','2019-06-12 10:25:11'),('sdadasdasdas','deikme','2019-06-17 14:54:09'),('dasdasdasdas','nemanja','2019-06-12 10:25:26'),('kkk','rr','2019-06-17 14:16:43'),('zxcczxczxczxczx','timur','2019-06-12 10:29:49');
 /*!40000 ALTER TABLE `posts` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -49,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-12 12:31:01
+-- Dump completed on 2019-06-17 18:13:30
