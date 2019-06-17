@@ -1,8 +1,9 @@
 from twisted.web import server, resource
 from twisted.internet import reactor
 from storage import Storage
-from errors import InputError
+from errors import InputError, raise_error
 from render import render
+from post import Post
 
 
 class MojSajt(resource.Resource):
@@ -18,8 +19,8 @@ class MojSajt(resource.Resource):
             request.setHeader(
                 "Content-Type", route_choice_dict[request.path][1])
             with open(route_choice_dict[request.path][0], 'r') as file:
-                data = file.read().encode('utf-8')
-                return data
+                data = file.read()
+                return data.encode('utf-8')
 
         elif request.path == b"/":
             request.setHeader("Content-Type", "text/html")
@@ -34,19 +35,22 @@ class MojSajt(resource.Resource):
                                  }
                     all_posts_list.append(post_dict)
                 data = {'posts': all_posts_list}
-
                 return render(template, data).encode('utf-8')
 
         elif request.path == b"/post_added":
             try:
-                new_post = Storage.read_post(request)
-                post = new_post.add_post(new_post)
+                new_post = Post.read_post(request)
+                post = Storage.add_post(new_post)
                 if not post:
-                    return 'Inpit another title: this title alredy exist'.encode('UTF-8')
+                    template, data = raise_error(
+                        'Inpit another title: this title alredy exist')
+                    return render(template, data).encode('UTF-8')
             except InputError as err:
-                return str(err).encode('UTF-8')
+                template, data = raise_error(str(err))
+                return render(template, data).encode('UTF-8')
             except Exception as err:
-                return str(err).encode('UTF-8')
+                template, data = raise_error(str(err))
+                return render(template, data).encode('UTF-8')
 
             if new_post:
                 data = {'title': new_post.title,
@@ -54,8 +58,6 @@ class MojSajt(resource.Resource):
                 with open('templates/tamplate_result/post_added.html', 'r') as file:
                     template = file.read()
                 return render(template, data).encode('utf-8')
-            else:
-                return 'somethig vent'
 
         elif request.path == b"/view_post":
             request.setHeader("Content-Type", "text/html")
@@ -65,7 +67,8 @@ class MojSajt(resource.Resource):
                     title = request.args[b"post_name"][0].decode('UTF-8')
                     post = Storage.select_post(title)
                 except Exception as err:
-                    return str(err).encode('UTF-8')
+                    template, data = raise_error(str(err))
+                    return render(template, data).encode('UTF-8')
 
                 if post:
                     data = {'title': post[1],
@@ -75,7 +78,8 @@ class MojSajt(resource.Resource):
                         template = file.read()
                     return render(template, data).encode('utf-8')
 
-        return "Unknown rout".encode('utf-8')
+        template, data = raise_error('Unknown rout')
+        return render(template, data).encode('UTF-8')
 
 
 site = server.Site(MojSajt())
