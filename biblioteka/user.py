@@ -10,6 +10,7 @@ class User:
     def __init__(self, first_name, last_name, user_address, phone_numb):
         if not first_name or not last_name \
                 or not user_address or not phone_numb:
+
             raise InputError("Every positional argument: 'first_name'"
                              "'last_name', 'user_address', 'phone_num', "
                              "must have some value")
