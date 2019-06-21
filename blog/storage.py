@@ -14,10 +14,8 @@ class Storage:
                 _SQL = '''INSERT INTO blog.posts(title, post)
                         VALUES (%s, %s);'''
                 cursor.execute(_SQL, (new_post.title, new_post.post))
-            except mysql.connector.errors.Error:
-                return False
-
-            return True
+            except mysql.connector.errors.Error as err:
+                return str(err)
 
     @staticmethod
     def select_all():
@@ -26,8 +24,6 @@ class Storage:
                          ORDER by time_post DESC;'''
             cursor.execute(_SQL)
             users = cursor.fetchall()
-            if not users:
-                return ''
             return users
 
     @staticmethod
@@ -37,6 +33,4 @@ class Storage:
                          WHERE title LIKE %s '''
             cursor.execute(_SQL, (title,))
             users = cursor.fetchall()
-            if not users:
-                return ''
             return users[0]

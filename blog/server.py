@@ -19,13 +19,13 @@ class MojSajt(resource.Resource):
             request.setHeader(
                 "Content-Type", route_choice_dict[request.path][1])
             with open(route_choice_dict[request.path][0], 'r') as file:
-                data = file.read()
-                return data.encode('utf-8')
+                template_content = file.read()
+            return Post.read_base_template(template_content)
 
         elif request.path == b"/":
             request.setHeader("Content-Type", "text/html")
             with open('templates/home.html', 'r') as file:
-                template = file.read()
+                template_smal = file.read()
                 all_posts = Storage.select_all()
                 all_posts_list = []
                 for post in all_posts:
@@ -34,41 +34,41 @@ class MojSajt(resource.Resource):
                                  'date': str(post[2])
                                  }
                     all_posts_list.append(post_dict)
-                data = {'posts': all_posts_list}
-                return render(template, data).encode('utf-8')
+                data_smal = {'posts': all_posts_list}
+                template_content = render(template_smal, data_smal)
+                return Post.read_base_template(template_content)
 
         elif request.path == b"/post_added":
             try:
                 new_post = Post.read_post(request)
                 post = Storage.add_post(new_post)
-                if not post:
-                    template, data = InputError.raise_error(
-                        'Inpit another title: this title alredy exist')
-                    return render(template, data).encode('UTF-8')
+                data_smal = {'title': new_post.title,
+                             'post': new_post.post}
+                with open('templates/tamplate_result/post_added.html', 'r') as file:
+                    template_smal = file.read()
+                    template_content = render(template_smal, data_smal)
+                    return Post.read_base_template(template_content)
+
             except InputError as err:
                 template, data = InputError.raise_error(str(err))
-                return render(template, data).encode('UTF-8')
+                template_content = render(template, data)
+                return Post.read_base_template(template_content)
             except Exception as err:
                 template, data = InputError.raise_error(str(err))
-                return render(template, data).encode('UTF-8')
-
-            if new_post:
-                data = {'title': new_post.title,
-                        'post': new_post.post}
-                with open('templates/tamplate_result/post_added.html', 'r') as file:
-                    template = file.read()
-                return render(template, data).encode('utf-8')
+                template_content = render(template, data)
+                return Post.read_base_template(template_content)
 
         elif request.path == b"/view_post":
             request.setHeader("Content-Type", "text/html")
             with open('templates/view_post.html', 'r') as file:
-                template = file.read().encode('utf-8')
+                template_content = file.read()
                 try:
                     title = request.args[b"post_name"][0].decode('UTF-8')
                     post = Storage.select_post(title)
                 except Exception as err:
                     template, data = InputError.raise_error(str(err))
-                    return render(template, data).encode('UTF-8')
+                    template_content = render(template, data).encode('UTF-8')
+                    return Post.read_base_template(template_content)
 
                 if post:
                     data = {'title': post[1],
@@ -76,10 +76,12 @@ class MojSajt(resource.Resource):
                             'date': str(post[2])}
                     with open('templates/tamplate_result/post_selected.html', 'r') as file:
                         template = file.read()
-                    return render(template, data).encode('utf-8')
+                    template_content = render(template, data)
+                    return Post.read_base_template(template_content)
 
         template, data = InputError.raise_error('Unknown rout')
-        return render(template, data).encode('UTF-8')
+        template_content = render(template, data)
+        return Post.read_base_template(template_content)
 
 
 site = server.Site(MojSajt())
