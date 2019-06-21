@@ -28,8 +28,9 @@ CREATE TABLE `posts` (
   `post` mediumtext NOT NULL,
   `title` varchar(45) NOT NULL,
   `time_post` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`title`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `post_id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`post_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +39,7 @@ CREATE TABLE `posts` (
 
 LOCK TABLES `posts` WRITE;
 /*!40000 ALTER TABLE `posts` DISABLE KEYS */;
-INSERT INTO `posts` VALUES ('sadasdasdasdas','bakir','2019-06-12 10:25:11'),('sdadasdasdas','deikme','2019-06-17 14:54:09'),('dasdasdasdas','nemanja','2019-06-12 10:25:26'),('kkk','rr','2019-06-17 14:16:43'),('zxcczxczxczxczx','timur','2019-06-12 10:29:49');
+INSERT INTO `posts` VALUES ('sadsadasdas','bakirsdasd','2019-06-21 09:28:03',1),('sdasdasd','bakir','2019-06-21 09:28:11',2),('sadawdqwdqwdwq','bakir','2019-06-21 09:28:17',3),('werqwrqwer','nemanja','2019-06-21 09:31:08',4),('k;lk;ll;kl','nemanja','2019-06-21 09:31:54',5),('k;lk;ll;kl','nemanja','2019-06-21 09:32:48',6),('jlkjkljkljkl','timur','2019-06-21 09:33:55',7),('jlkjkljkljkl','timur','2019-06-21 09:33:55',8),('oipoipoipo','bakirsdasd','2019-06-21 09:35:32',9),('jjjj','bakir','2019-06-21 09:44:27',10),('mmmmm','bakir','2019-06-21 09:46:04',11);
 /*!40000 ALTER TABLE `posts` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-18 12:52:11
+-- Dump completed on 2019-06-21 11:51:12
