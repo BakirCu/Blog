@@ -41,7 +41,7 @@ class MojSajt(resource.Resource):
         elif request.path == b"/post_added":
             try:
                 new_post = Post.read_post(request)
-                post = Storage.add_post(new_post)
+                Storage.add_post(new_post)
                 data_smal = {'title': new_post.title,
                              'post': new_post.post}
                 with open('templates/tamplate_result/post_added.html', 'r') as file:

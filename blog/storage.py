@@ -1,6 +1,7 @@
 import mysql.connector
 from configuration import Configuration
 from data_base import UseDatabase
+from errors import InputError
 
 
 class Storage:
@@ -15,7 +16,7 @@ class Storage:
                         VALUES (%s, %s);'''
                 cursor.execute(_SQL, (new_post.title, new_post.post))
             except mysql.connector.errors.Error as err:
-                return str(err)
+                raise InputError(str(err))
 
     @staticmethod
     def select_all():
