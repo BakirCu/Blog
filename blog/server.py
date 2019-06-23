@@ -32,7 +32,6 @@ class MojSajt(resource.Resource):
             with open('templates/home.html', 'r') as file:
                 template_smal = file.read()
                 all_posts = Storage.select_all()
-                print(all_posts)
                 all_posts_list = []
                 for post in all_posts:
 
@@ -70,7 +69,6 @@ class MojSajt(resource.Resource):
             with open('templates/view_post.html', 'r') as file:
                 template_content = file.read()
                 try:
-                    print(request.args)
                     title = request.args[b"post_name"][0].decode('UTF-8')
                     post_content = request.args[b"post_content"][0].decode(
                         'UTF-8')
