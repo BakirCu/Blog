@@ -6,3 +6,7 @@ class InputError(Exception):
         with open('templates/tamplate_result/erorrs_returned.html', 'r') as file:
             template = file.read()
         return template, data
+
+
+class MySQLError(Exception):
+    pass

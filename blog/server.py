@@ -1,7 +1,7 @@
 from twisted.web import server, resource
 from twisted.internet import reactor
 from storage import Storage
-from errors import InputError
+from errors import InputError, MySQLError
 from render import render
 from post import Post
 
@@ -16,22 +16,29 @@ class MojSajt(resource.Resource):
         }
 
         if request.path in route_choice_dict:
-            request.setHeader(
-                "Content-Type", route_choice_dict[request.path][1])
-            with open(route_choice_dict[request.path][0], 'r') as file:
-                template_content = file.read()
-            return Post.read_base_template(template_content)
+            try:
+                request.setHeader(
+                    "Content-Type", route_choice_dict[request.path][1])
+                with open(route_choice_dict[request.path][0], 'r') as file:
+                    template_content = file.read()
+                return Post.read_base_template(template_content)
+            except MySQLError as err:
+                template, data = InputError.raise_error(str(err))
+                template_content = render(template, data)
+                return Post.read_base_template(template_content)
 
         elif request.path == b"/":
             request.setHeader("Content-Type", "text/html")
             with open('templates/home.html', 'r') as file:
                 template_smal = file.read()
                 all_posts = Storage.select_all()
+                print(all_posts)
                 all_posts_list = []
                 for post in all_posts:
-                    post_dict = {'title': post[1],
-                                 'post': post[0],
-                                 'date': str(post[2])
+
+                    post_dict = {'title': post[0],
+                                 'post': post[3],
+                                 'date': str(post[1])
                                  }
                     all_posts_list.append(post_dict)
                 data_smal = {'posts': all_posts_list}
@@ -41,7 +48,7 @@ class MojSajt(resource.Resource):
         elif request.path == b"/post_added":
             try:
                 new_post = Post.read_post(request)
-                Storage.add_post(new_post)
+                post = Storage.add_post(new_post)
                 data_smal = {'title': new_post.title,
                              'post': new_post.post}
                 with open('templates/tamplate_result/post_added.html', 'r') as file:
@@ -63,19 +70,20 @@ class MojSajt(resource.Resource):
             with open('templates/view_post.html', 'r') as file:
                 template_content = file.read()
                 try:
+                    print(request.args)
                     title = request.args[b"post_name"][0].decode('UTF-8')
-                    post = Storage.select_post(title)
-                except Exception as err:
-                    template, data = InputError.raise_error(str(err))
-                    template_content = render(template, data).encode('UTF-8')
-                    return Post.read_base_template(template_content)
-
-                if post:
-                    data = {'title': post[1],
-                            'post': post[0],
-                            'date': str(post[2])}
+                    post_content = request.args[b"post_content"][0].decode(
+                        'UTF-8')
+                    post = Storage.select_post(title, post_content)
+                    data = {'title': post[0],
+                            'post': post[3],
+                            'date': str(post[1])}
                     with open('templates/tamplate_result/post_selected.html', 'r') as file:
                         template = file.read()
+                    template_content = render(template, data)
+                    return Post.read_base_template(template_content)
+                except Exception as err:
+                    template, data = InputError.raise_error(str(err))
                     template_content = render(template, data)
                     return Post.read_base_template(template_content)
 
