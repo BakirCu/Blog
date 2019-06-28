@@ -31,23 +31,45 @@ class MojSajt(resource.Resource):
             request.setHeader("Content-Type", "text/html")
             with open('templates/home.html', 'r') as file:
                 template_smal = file.read()
-                all_posts = Storage.select_all()
+                all_posts = Storage.select_posts(0, 7)
                 all_posts_list = []
+
                 for post in all_posts:
 
                     post_dict = {'title': post[0],
                                  'post': post[3],
-                                 'date': str(post[1])
+                                 'date': str(post[1]),
+                                 'id': str(post[2])
                                  }
                     all_posts_list.append(post_dict)
                 data_smal = {'posts': all_posts_list}
+                post_len = Storage.post_len()
+
+                if post_len > 7:
+                    data_smal['next'] = '<a href="/get_posts?page=2&page_size=7"> Next </a>'
+
+                else:
+                    data_smal['next'] = ''
                 template_content = render(template_smal, data_smal)
+
                 return Post.read_base_template(template_content)
+
+        elif request.path == b"/get_posts":
+            print(request.uri)
+            page = request.args[b"page"][0].decode('UTF-8')
+            page_size = request.args[b"page_size"][0].decode('UTF-8')
+            page_num = int(page)
+            page_size_num = int(page_size)
+            page_next_num = page_num + 1
+            page_next_str = str(page_next_num)
+            aderss = '<a href="/get_posts?page={}&page_size={}"> Next </a>'.format(
+                page_next_str, str(page_size_num))
+            return aderss.encode('utf-8')
 
         elif request.path == b"/post_added":
             try:
                 new_post = Post.read_post(request)
-                post = Storage.add_post(new_post)
+                Storage.add_post(new_post)
                 data_smal = {'title': new_post.title,
                              'post': new_post.post}
                 with open('templates/tamplate_result/post_added.html', 'r') as file:
@@ -70,12 +92,14 @@ class MojSajt(resource.Resource):
                 template_content = file.read()
                 try:
                     title = request.args[b"post_name"][0].decode('UTF-8')
-                    post_content = request.args[b"post_content"][0].decode(
+                    post_id = request.args[b"post_id"][0].decode(
                         'UTF-8')
-                    post = Storage.select_post(title, post_content)
+                    post = Storage.select_post(title, post_id)
+                    print(post)
                     data = {'title': post[0],
                             'post': post[3],
-                            'date': str(post[1])}
+                            'date': str(post[1]),
+                            'id': str(post[2])}
                     with open('templates/tamplate_result/post_selected.html', 'r') as file:
                         template = file.read()
                     template_content = render(template, data)

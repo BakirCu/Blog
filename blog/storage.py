@@ -19,21 +19,31 @@ class Storage:
                 raise MySQLError(str(err))
 
     @staticmethod
-    def select_all():
+    def select_posts(page, page_size):
         with UseDatabase(Storage.config_dict) as cursor:
             _SQL = '''SELECT * FROM blog.posts
-                         ORDER by time_post DESC;'''
-            cursor.execute(_SQL)
+                         ORDER by time_post DESC
+                         LIMIT %s,%s;'''
+            cursor.execute(_SQL, (page, page_size))
             users = cursor.fetchall()
-            print(users)
             return users
 
     @staticmethod
-    def select_post(title, post_content):
+    def select_post(title, post_id):
         with UseDatabase(Storage.config_dict) as cursor:
             _SQL = '''SELECT * FROM blog.posts
-                         WHERE title LIKE %s and post LIKE %s'''
-            cursor.execute(_SQL, (title, post_content))
+                         WHERE title LIKE %s and post_id LIKE %s'''
+            cursor.execute(_SQL, (title, post_id))
             users = cursor.fetchall()
-            print(users)
             return users[0]
+
+    @staticmethod
+    def post_len():
+        with UseDatabase(Storage.config_dict) as cursor:
+            _SQL = '''select count(*) FROM blog.posts'''
+            cursor.execute(_SQL)
+            post_len = cursor.fetchall()
+            return post_len[0][0]
+
+
+print(Storage.post_len())
