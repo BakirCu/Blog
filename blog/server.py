@@ -51,6 +51,7 @@ class MojSajt(resource.Resource):
 
                 else:
                     data_smal['next'] = ''
+                    data_smal['previous'] = ''
                 template_content = render(template_smal, data_smal)
 
                 return Post.read_base_template(template_content)
