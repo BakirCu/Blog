@@ -47,6 +47,7 @@ class MojSajt(resource.Resource):
 
                 if post_len > 7:
                     data_smal['next'] = '<a href="/get_posts?page=2&page_size=7"> Next </a>'
+                    data_smal['previous'] = ''
 
                 else:
                     data_smal['next'] = ''
@@ -55,16 +56,82 @@ class MojSajt(resource.Resource):
                 return Post.read_base_template(template_content)
 
         elif request.path == b"/get_posts":
-            print(request.uri)
             page = request.args[b"page"][0].decode('UTF-8')
             page_size = request.args[b"page_size"][0].decode('UTF-8')
+            if page == '1' and page_size == '7':
+                request.path = b"/"
+                # ovde sa bukvalno kopirao sve sa putanje '/', a to znam da nije dobro,
+                #  ali ne znam kao da kad mi je page =1 ponovo procitam sve sa request.path == b"/":
+                request.setHeader("Content-Type", "text/html")
+                with open('templates/home.html', 'r') as file:
+                    template_smal = file.read()
+                    all_posts = Storage.select_posts(0, 7)
+                    all_posts_list = []
+
+                    for post in all_posts:
+
+                        post_dict = {'title': post[0],
+                                     'post': post[3],
+                                     'date': str(post[1]),
+                                     'id': str(post[2])
+                                     }
+                        all_posts_list.append(post_dict)
+                    data_smal = {'posts': all_posts_list}
+                    post_len = Storage.post_len()
+
+                    if post_len > 7:
+                        data_smal['next'] = '<a href="/get_posts?page=2&page_size=7"> Next </a>'
+                        data_smal['previous'] = ''
+
+                    else:
+                        data_smal['next'] = ''
+                    template_content = render(template_smal, data_smal)
+
+                    return Post.read_base_template(template_content)
+
             page_num = int(page)
             page_size_num = int(page_size)
+            if page_num < 1:
+                template, data = InputError.raise_error(
+                    'Page must be pozitive nuber')
+                template_content = render(template, data)
+                return Post.read_base_template(template_content)
+
             page_next_num = page_num + 1
+            page_previous_num = page_num - 1
+            page_previous_str = str(page_previous_num)
             page_next_str = str(page_next_num)
-            aderss = '<a href="/get_posts?page={}&page_size={}"> Next </a>'.format(
+            link_next_page = '<a href="/get_posts?page={}&page_size={}"> Next </a>'.format(
                 page_next_str, str(page_size_num))
-            return aderss.encode('utf-8')
+            link_previous_page = '<a href="/get_posts?page={}&page_size={}"> Previous </a>'.format(
+                page_previous_str, str(page_size_num))
+            with open('templates/home.html', 'r') as file:
+                template_smal = file.read()
+                all_posts = Storage.select_posts((page_num-1)*page_size_num, 7)
+
+                if len(all_posts) < 7:
+                    link_next_page = ''
+                if not all_posts:
+                    template, data = InputError.raise_error(
+                        'No more posts to show')
+                    template_content = render(template, data)
+                    return Post.read_base_template(template_content)
+
+                all_posts_list = []
+                for post in all_posts:
+
+                    post_dict = {'title': post[0],
+                                 'post': post[3],
+                                 'date': str(post[1]),
+                                 'id': str(post[2])
+                                 }
+                    all_posts_list.append(post_dict)
+                data_smal = {'posts': all_posts_list,
+                             'next': link_next_page,
+                             'previous': link_previous_page}
+            template_content = render(template_smal, data_smal)
+
+            return Post.read_base_template(template_content)
 
         elif request.path == b"/post_added":
             try:
