@@ -158,10 +158,10 @@ class MojSajt(resource.Resource):
             with open('templates/view_post.html', 'r') as file:
                 template_content = file.read()
                 try:
-                    title = request.args[b"post_name"][0].decode('UTF-8')
+
                     post_id = request.args[b"post_id"][0].decode(
                         'UTF-8')
-                    post = Storage.select_post(title, post_id)
+                    post = Storage.select_post(post_id)
                     print(post)
                     data = {'title': post[0],
                             'post': post[3],

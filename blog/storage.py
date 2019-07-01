@@ -29,11 +29,11 @@ class Storage:
             return users
 
     @staticmethod
-    def select_post(title, post_id):
+    def select_post(post_id):
         with UseDatabase(Storage.config_dict) as cursor:
             _SQL = '''SELECT * FROM blog.posts
-                         WHERE title LIKE %s and post_id LIKE %s'''
-            cursor.execute(_SQL, (title, post_id))
+                         WHERE post_id LIKE %s'''
+            cursor.execute(_SQL, (post_id,))
             users = cursor.fetchall()
             return users[0]
 
