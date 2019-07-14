@@ -32,7 +32,7 @@ class Storage:
     def select_post(post_id):
         with UseDatabase(Storage.config_dict) as cursor:
             _SQL = '''SELECT * FROM blog.posts
-                         WHERE post_id LIKE %s'''
+                         WHERE post_id = %s'''
             cursor.execute(_SQL, (post_id,))
             users = cursor.fetchall()
             return users[0]
@@ -44,6 +44,3 @@ class Storage:
             cursor.execute(_SQL)
             post_len = cursor.fetchall()
             return post_len[0][0]
-
-
-print(Storage.post_len())

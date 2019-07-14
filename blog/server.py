@@ -9,6 +9,36 @@ from post import Post
 class MojSajt(resource.Resource):
     isLeaf = True
 
+    @staticmethod
+    def home(request):
+        request.setHeader("Content-Type", "text/html")
+        with open('templates/home.html', 'r') as file:
+            template_smal = file.read()
+            all_posts = Storage.select_posts(0, 7)
+            all_posts_list = []
+
+            for post in all_posts:
+
+                post_dict = {'title': post[0],
+                             'post': post[3],
+                             'date': str(post[1]),
+                             'id': str(post[2])
+                             }
+                all_posts_list.append(post_dict)
+            data_smal = {'posts': all_posts_list}
+            post_len = Storage.post_len()
+
+            if post_len > 7:
+                data_smal['next'] = '<a href="/get_posts?page=2&page_size=7"> Next </a>'
+                data_smal['previous'] = ''
+
+            else:
+                data_smal['next'] = ''
+                data_smal['previous'] = ''
+            template_content = render(template_smal, data_smal)
+
+            return Post.read_base_template(template_content)
+
     def render_GET(self, request):
 
         route_choice_dict = {
@@ -28,33 +58,7 @@ class MojSajt(resource.Resource):
                 return Post.read_base_template(template_content)
 
         elif request.path == b"/":
-            request.setHeader("Content-Type", "text/html")
-            with open('templates/home.html', 'r') as file:
-                template_smal = file.read()
-                all_posts = Storage.select_posts(0, 7)
-                all_posts_list = []
-
-                for post in all_posts:
-
-                    post_dict = {'title': post[0],
-                                 'post': post[3],
-                                 'date': str(post[1]),
-                                 'id': str(post[2])
-                                 }
-                    all_posts_list.append(post_dict)
-                data_smal = {'posts': all_posts_list}
-                post_len = Storage.post_len()
-
-                if post_len > 7:
-                    data_smal['next'] = '<a href="/get_posts?page=2&page_size=7"> Next </a>'
-                    data_smal['previous'] = ''
-
-                else:
-                    data_smal['next'] = ''
-                    data_smal['previous'] = ''
-                template_content = render(template_smal, data_smal)
-
-                return Post.read_base_template(template_content)
+            return MojSajt.home(request)
 
         elif request.path == b"/get_posts":
             page = request.args[b"page"][0].decode('UTF-8')
@@ -156,14 +160,14 @@ class MojSajt(resource.Resource):
 
         elif request.path == b"/view_post":
             request.setHeader("Content-Type", "text/html")
-            with open('templates/view_post.html', 'r') as file:
+            with open('templates/base.html', 'r') as file:
                 template_content = file.read()
                 try:
 
                     post_id = request.args[b"post_id"][0].decode(
                         'UTF-8')
                     post = Storage.select_post(post_id)
-                    print(post)
+
                     data = {'title': post[0],
                             'post': post[3],
                             'date': str(post[1]),

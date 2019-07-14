@@ -3,6 +3,9 @@ from render import render
 
 
 class Post:
+    with open('templates/base.html', 'r') as file:
+        template = file.read()
+
     def __init__(self, title, post):
         if not title or not post:
             raise InputError('Title and post must have some value')
@@ -17,7 +20,5 @@ class Post:
 
     @staticmethod
     def read_base_template(template_for_inheritance):
-        with open('templates/base.html', 'r') as file:
-            data = {'content': str(template_for_inheritance)}
-            template = file.read()
-            return render(template, data).encode('UTF-8')
+        data = {'content': str(template_for_inheritance)}
+        return render(Post.template, data).encode('UTF-8')
