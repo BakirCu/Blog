@@ -18,53 +18,55 @@ class MojSajt(resource.Resource):
         page = request.args[b"page"][0].decode('UTF-8')
         page_size = request.args[b"page_size"][0].decode('UTF-8')
 
-        return MojSajt.get_posts_from_to(request, page, page_size)
+        return MojSajt.get_posts_from_to(request, int(page), int(page_size))
 
     @staticmethod
     def get_posts_from_to(request, page, page_size):
-        page_num = int(page)
-        page_size_num = int(page_size)
-
-        if page_num < 1:
+        if page < 1:
             template, data = InputError.raise_error(
-                'Page must be pozitive nuber')
+                'Page must be positive nuber')
             template_content = render(template, data)
             return Post.read_base_template(template_content)
 
-        page_next_num = page_num + 1
-        page_previous_num = page_num - 1
-        page_previous_str = str(page_previous_num)
-        page_next_str = str(page_next_num)
-        link_next_page = '<a href="/get_posts?page={}&page_size={}"> Next </a>'.format(
-            page_next_str, str(page_size_num))
-        link_previous_page = '<a href="/get_posts?page={}&page_size={}"> Previous </a>'.format(
-            page_previous_str, str(page_size_num))
+        page_previous_num = page - 1
+
+        link_next_template = '<a href="/get_posts?page={}&page_size={}"> Next </a>'
+        link_next = link_next_template.format(str(page + 1), str(page_size))
+
+        link_prev_template = '<a href="/get_posts?page={}&page_size={}"> Previous </a>'
+        link_previous = link_prev_template.format(
+            str(page_previous_num), str(page_size))
+
+        all_posts = Storage.select_posts(
+            (page-1)*page_size, page_size)
+
+        if len(all_posts) < page_previous_num or len(all_posts) < page_size:
+            link_next = ''
+        if page == 1:
+            link_previous = ''
+
+        if not all_posts:
+            template, data = InputError.raise_error(
+                'No more posts to show')
+            template_content = render(template, data)
+            return Post.read_base_template(template_content)
+
+        all_posts_list = []
+        for post in all_posts:
+            post_dict = {'title': post[0],
+                         'post': post[3],
+                         'date': str(post[1]),
+                         'id': str(post[2])
+                         }
+            all_posts_list.append(post_dict)
+
+        data_small = {'posts': all_posts_list,
+                      'next': link_next,
+                      'previous': link_previous}
+
         with open('templates/home.html', 'r') as file:
-            template_smal = file.read()
-            all_posts = Storage.select_posts(
-                (page_num-1)*page_size_num, page_size_num)
-
-            if len(all_posts) < page_previous_num:
-                link_next_page = ''
-            if not all_posts:
-                template, data = InputError.raise_error(
-                    'No more posts to show')
-                template_content = render(template, data)
-                return Post.read_base_template(template_content)
-
-            all_posts_list = []
-            for post in all_posts:
-
-                post_dict = {'title': post[0],
-                             'post': post[3],
-                             'date': str(post[1]),
-                             'id': str(post[2])
-                             }
-                all_posts_list.append(post_dict)
-            data_smal = {'posts': all_posts_list,
-                         'next': link_next_page,
-                         'previous': link_previous_page}
-        template_content = render(template_smal, data_smal)
+            template_small = file.read()
+            template_content = render(template_small, data_small)
 
         return Post.read_base_template(template_content)
 
