@@ -37,13 +37,16 @@ class MojSajt(resource.Resource):
         link_previous = link_prev_template.format(
             str(page_previous_num), str(page_size))
 
-        all_posts = Storage.select_posts(
-            (page-1)*page_size, page_size)
+        post_len = Storage.post_len()
 
-        if len(all_posts) < page_previous_num or len(all_posts) < page_size:
+        if page * page_size >= post_len:
             link_next = ''
+
         if page == 1:
             link_previous = ''
+
+        all_posts = Storage.select_posts(
+            (page-1)*page_size, page_size)
 
         if not all_posts:
             template, data = InputError.raise_error(
