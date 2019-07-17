@@ -15,14 +15,26 @@ class MojSajt(resource.Resource):
 
     @staticmethod
     def get_posts(request):
-        page = request.args[b"page"][0].decode('UTF-8')
-        page_size = request.args[b"page_size"][0].decode('UTF-8')
+        try:
+            page = request.args[b"page"][0].decode('UTF-8')
+            page_size = request.args[b"page_size"][0].decode('UTF-8')
+        except Exception:
+            template, data = InputError.raise_error(
+                "Check:'page' and 'page_size'")
+            template_content = render(template, data)
+            return Post.read_base_template(template_content)
+
+        if not page.isnumeric() or not page_size.isnumeric():
+            template, data = InputError.raise_error(
+                'Page and page_size must be positive numbers')
+            template_content = render(template, data)
+            return Post.read_base_template(template_content)
 
         return MojSajt.get_posts_from_to(request, int(page), int(page_size))
 
     @staticmethod
     def get_posts_from_to(request, page, page_size):
-        if page < 1:
+        if page < 1 or page_size < 1:
             template, data = InputError.raise_error(
                 'Page must be positive nuber')
             template_content = render(template, data)
