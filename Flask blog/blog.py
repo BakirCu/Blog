@@ -30,7 +30,10 @@ def view_post():
 
     post = Storage.select_post(post_id)
 
-    return str(post_id) + str(post)
+    return render_template('post_selected.html',
+                           title=post[0],
+                           post=post[3],
+                           date=post[1])
 
 
 app.run()
