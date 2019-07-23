@@ -86,27 +86,6 @@ class MojSajt(resource.Resource):
         return Post.read_base_template(template_content)
 
     @staticmethod
-    def post_added(request):
-        try:
-            new_post = Post.read_post(request)
-            Storage.add_post(new_post)
-            data_smal = {'title': new_post.title,
-                         'post': new_post.post}
-            with open('templates/tamplate_result/post_added.html', 'r') as file:
-                template_smal = file.read()
-                template_content = render(template_smal, data_smal)
-                return Post.read_base_template(template_content)
-
-        except InputError as err:
-            template, data = InputError.raise_error(str(err))
-            template_content = render(template, data)
-            return Post.read_base_template(template_content)
-        except Exception as err:
-            template, data = InputError.raise_error(str(err))
-            template_content = render(template, data)
-            return Post.read_base_template(template_content)
-
-    @staticmethod
     def view_post(request):
         request.setHeader("Content-Type", "text/html")
         with open('templates/base.html', 'r') as file:
@@ -133,7 +112,7 @@ class MojSajt(resource.Resource):
     def render_GET(self, request):
         dinamic_rouds_dict = {b"/": MojSajt.home,
                               b"/get_posts": MojSajt.get_posts,
-                              b"/post_added": MojSajt.post_added,
+                              b"/post_added": MojSajt.render_POST,
                               b"/view_post": MojSajt.view_post}
 
         static_rouds_dict = {
@@ -158,6 +137,26 @@ class MojSajt(resource.Resource):
         template, data = InputError.raise_error('Unknown rout')
         template_content = render(template, data)
         return Post.read_base_template(template_content)
+
+    def render_POST(self, request):
+        try:
+            new_post = Post.read_post(request)
+            Storage.add_post(new_post)
+            data_smal = {'title': new_post.title,
+                         'post': new_post.post}
+            with open('templates/tamplate_result/post_added.html', 'r') as file:
+                template_smal = file.read()
+                template_content = render(template_smal, data_smal)
+                return Post.read_base_template(template_content)
+
+        except InputError as err:
+            template, data = InputError.raise_error(str(err))
+            template_content = render(template, data)
+            return Post.read_base_template(template_content)
+        except Exception as err:
+            template, data = InputError.raise_error(str(err))
+            template_content = render(template, data)
+            return Post.read_base_template(template_content)
 
 
 site = server.Site(MojSajt())

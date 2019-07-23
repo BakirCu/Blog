@@ -25,11 +25,8 @@ def post_added():
 
 @app.route('/view_post')
 def view_post():
-
     post_id = request.args.get("post_id")
-
     post = Storage.select_post(post_id)
-
     return render_template('post_selected.html',
                            title=post[0],
                            post=post[3],
