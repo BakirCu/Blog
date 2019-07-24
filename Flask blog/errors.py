@@ -1,11 +1,11 @@
+from flask import render_template
+
+
 class InputError(Exception):
 
     @staticmethod
     def raise_error(erorr_str):
-        data = {'erorr': erorr_str}
-        with open('templates/tamplate_result/erorrs_returned.html', 'r') as file:
-            template = file.read()
-        return template, data
+        return render_template('erorrs_returned.html', erorr=erorr_str)
 
 
 class MySQLError(Exception):

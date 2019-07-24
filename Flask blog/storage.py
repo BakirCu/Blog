@@ -19,13 +19,14 @@ class Storage:
                 raise MySQLError(str(err))
 
     @staticmethod
-    def select_posts():
+    def select_posts(page, page_size):
         with UseDatabase(Storage.config_dict) as cursor:
             _SQL = '''SELECT * FROM blog.posts
                          ORDER by time_post DESC
-                         '''
-            cursor.execute(_SQL,)
+                         LIMIT %s,%s;'''
+            cursor.execute(_SQL, (page, page_size))
             users = cursor.fetchall()
+
             return users
 
     @staticmethod

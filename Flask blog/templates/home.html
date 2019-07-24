@@ -4,13 +4,13 @@
 
 
 {% for post in posts %}
-<h1><a href="/view_post?post_id={{post[2]}}">Post:{{post[0]}}</a></h1>
+<h1><a href="/view_post?post_id={{post.id}}">Post:{{post.title}}</a></h1>
 <br>
-<p><b>{{post[3]}}</b> </p>
+<p><b>{{post.post_content}}</b> </p>
 <br>
-<p>{{post[1]}}</p>
+<p>{{post.date}}</p>
 <hr>
 {% endfor %}
 
-
+{{ previous }} {{ next }}
 {% endblock %}
