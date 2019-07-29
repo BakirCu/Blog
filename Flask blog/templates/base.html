@@ -12,24 +12,26 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="p-3 mb-2 bg-secondary text-white">
+        <div class="container bg-dark">
+            <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+                <ul class="navbar-nav">
+                    {{li_home}}
+                    <a class="nav-link" href="/">Home</a>
+                    </li>
 
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <ul class="navbar-nav">
-                {{li_home}}
-                <a class="nav-link" href="/">Home</a>
-                </li>
+                    {{li_new_post}}
+                    <a class='nav-link' href="/new_post">New post</a>
+                    </li>
 
-                {{li_new_post}}
-                <a class='nav-link' href="/new_post">New post</a>
-                </li>
+                </ul>
+            </nav>
+            {% block body %}
 
-            </ul>
-        </nav>
-        {% block body %}
-
-        {% endblock %}
+            {% endblock %}
+        </div>
     </div>
+
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

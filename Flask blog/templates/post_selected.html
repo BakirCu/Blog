@@ -2,11 +2,15 @@
 
 {% block body %}
 
-
-<h1>Post:{{title}}</h1>
-<br>
-<p><b>{{post}}</b> </p>
-<br>
-<p>{{date}}</p>
-
+<div class="jumbotron text-dark">
+    <h1>Post:</h1>
+    <br>
+    <h3>{{title}}</h3>
+    <br>
+    <h1>Content:</h1>
+    <br>
+    <h3>{{post}}</h3>
+    <br>
+    <p class="fas fa-clock">{{date}}</p>
+</div>
 {% endblock %}
