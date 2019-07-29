@@ -1,16 +1,26 @@
 {% extends 'base.html' %}
 
 {% block body %}
+{%for post in  posts%}
+<div id="accordion"></div>
+<div class="card">
+    <h1><a href="/view_post?post_id={{post.id}}"> {{post.title}}</a></h1>
+    <a class="collapsed card-link" data-toggle="collapse" href="#collapse{{post.id}}">
+        Show post
+    </a>
 
+    <div id="collapse{{post.id}}" class="collapse" data-parent="#accordion">
+        <div class="card-body">
+            <p><b>{{post.post_content}}</b> </p>
+        </div>
+    </div>
 
-{% for post in posts %}
-<h1><a href="/view_post?post_id={{post.id}}">Post:{{post.title}}</a></h1>
-<br>
-<p><b>{{post.post_content}}</b> </p>
-<br>
-<p>{{post.date}}</p>
-<hr>
-{% endfor %}
+    <i class="fas fa-clock"> posted {{post.date}}</i>
 
-{{ previous }} {{ next }}
-{% endblock %}
+    {% endfor %}
+    <ul class="pagination justify-content-center">
+        <li class="page-item">{{ previous }}
+        <li class="page-item">{{ next }}
+    </ul>
+
+    {% endblock %}

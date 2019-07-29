@@ -8,14 +8,17 @@ app = Flask(__name__)
 
 
 def get_posts_from_to(page, page_size):
+    li_home = Markup('<li class="nav-item" >')
+    li_new_post = Markup('<li class="nav-item " >')
+
     if page < 1 or page_size < 1:
         return InputError.raise_error('Page must be positive nuber')
     link_next_template = Markup(
-        '<a href="/get_posts?page={}&page_size={}"> Next </a>')
+        '<a class="page-link" href="/get_posts?page={}&page_size={}"> Next </a>')
     link_next = link_next_template.format(str(page + 1), str(page_size))
 
     link_prev_template = Markup(
-        '<a href="/get_posts?page={}&page_size={}"> Previous </a>')
+        '<a class="page-link" href="/get_posts?page={}&page_size={}"> Previous </a>')
     link_previous = link_prev_template.format(str(page - 1), str(page_size))
 
     post_len = Storage.post_len()
@@ -23,6 +26,7 @@ def get_posts_from_to(page, page_size):
         link_next = ''
     if page == 1:
         link_previous = ''
+        li_home = Markup('<li class="nav-item active" >')
 
     posts_from_to = Storage.select_posts(
         (page-1)*page_size, page_size)
@@ -34,7 +38,7 @@ def get_posts_from_to(page, page_size):
     if not posts_from_to:
         return InputError.raise_error('No more posts to show')
 
-    return render_template('home.html', posts=posts, next=link_next, previous=link_previous)
+    return render_template('home.html', li_home=li_home, li_new_post=li_new_post, posts=posts, next=link_next, previous=link_previous)
 
 
 @app.route('/')
@@ -44,7 +48,9 @@ def home():
 
 @app.route('/new_post')
 def new_post():
-    return render_template('new_post.html')
+    li_home = Markup('<li class="nav-item ">')
+    li_new_post = Markup('<li class="nav-item active" >')
+    return render_template('new_post.html', li_home=li_home, li_new_post=li_new_post)
 
 
 @app.route('/post_added', methods=['POST'])
