@@ -25,9 +25,9 @@ class Storage:
                          ORDER by time_post DESC
                          LIMIT %s,%s;'''
             cursor.execute(_SQL, (page, page_size))
-            users = cursor.fetchall()
-
-            return users
+            posts = cursor.fetchall()
+            print("All posts from base:", posts)
+            return posts
 
     @staticmethod
     def select_post(post_id):
@@ -35,8 +35,8 @@ class Storage:
             _SQL = '''SELECT * FROM blog.posts
                          WHERE post_id = %s'''
             cursor.execute(_SQL, (post_id,))
-            users = cursor.fetchall()
-            return users[0]
+            post = cursor.fetchall()
+            return post[0]
 
     @staticmethod
     def post_len():
@@ -45,3 +45,6 @@ class Storage:
             cursor.execute(_SQL)
             post_len = cursor.fetchall()
             return post_len[0][0]
+
+
+print(Storage.select_posts(0, 4))

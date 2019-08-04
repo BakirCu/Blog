@@ -30,10 +30,13 @@ def get_posts_from_to(page, page_size):
 
     posts_from_to = Storage.select_posts(
         (page-1)*page_size, page_size)
-    # ovde pravim listu objekata, da bi posle mogao lepo da prikazem u for petlji
+
     posts = []
     for post in posts_from_to:
-        posts.append(Post(post[0], post[1], post[2], post[3]))
+        # ako neko nije dodao sliku stavi ovu po defaultu
+        if not post[4]:
+            post[4] = 'https:// www.w3schools.com/bootstrap4/img_avatar3.png'
+        posts.append(Post(post[0], post[1], post[2], post[3], post[4]))
 
     if not posts_from_to:
         return InputError.raise_error('No more posts to show')
