@@ -1,13 +1,18 @@
-from flask import Flask, render_template, request, Markup
+from flask import Flask, render_template, request, Markup, session, redirect, url_for
 from storage import Storage
 from post import PostTitle, Post
 from errors import InputError
 
 
 app = Flask(__name__)
+app.secret_key = 'any random string'
 
 
 def get_posts_from_to(page, page_size):
+    log_in_out = Markup("<a class='nav-link' href='/login'>Log in</a>")
+    if 'log_in' in session:
+        log_in_out = Markup("<a class='nav-link' href='/logout'>Log out</a>")
+
     li_home = Markup('<li class="nav-item" >')
     li_new_post = Markup('<li class="nav-item " >')
 
@@ -30,18 +35,16 @@ def get_posts_from_to(page, page_size):
 
     posts_from_to = Storage.select_posts(
         (page-1)*page_size, page_size)
-
+    # ovde pravim listu objekata, da bi posle mogao lepo da prikazem u for petlji
     posts = []
     for post in posts_from_to:
-        # ako neko nije dodao sliku stavi ovu po defaultu
-        if not post[4]:
-            post[4] = 'https:// www.w3schools.com/bootstrap4/img_avatar3.png'
-        posts.append(Post(post[0], post[1], post[2], post[3], post[4]))
+
+        posts.append(Post(post[0], post[1], post[2], post[3]))
 
     if not posts_from_to:
         return InputError.raise_error('No more posts to show')
 
-    return render_template('home.html', li_home=li_home, li_new_post=li_new_post, posts=posts, next=link_next, previous=link_previous)
+    return render_template('home.html', li_home=li_home, li_new_post=li_new_post, posts=posts, next=link_next, previous=link_previous, log=log_in_out)
 
 
 @app.route('/')
@@ -51,9 +54,13 @@ def home():
 
 @app.route('/new_post')
 def new_post():
+
     li_home = Markup('<li class="nav-item ">')
     li_new_post = Markup('<li class="nav-item active" >')
-    return render_template('new_post.html', li_home=li_home, li_new_post=li_new_post)
+    if 'log_in' in session:
+        name = session['log_in']
+        return render_template('new_post.html', li_home=li_home, li_new_post=li_new_post, name=name)
+    return redirect(url_for('login'))
 
 
 @app.route('/post_added', methods=['POST'])
@@ -101,6 +108,20 @@ def view_post():
 @app.errorhandler(404)
 def page_not_found(err):
     return InputError.raise_error(str(err))
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        session['log_in'] = request.form['username']
+        return redirect(url_for('home'))
+    return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    session.pop('log_in', None)
+    return redirect(url_for('home'))
 
 
 app.run(debug=True)

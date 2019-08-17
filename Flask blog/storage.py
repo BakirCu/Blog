@@ -26,7 +26,7 @@ class Storage:
                          LIMIT %s,%s;'''
             cursor.execute(_SQL, (page, page_size))
             posts = cursor.fetchall()
-            print("All posts from base:", posts)
+
             return posts
 
     @staticmethod
@@ -45,6 +45,3 @@ class Storage:
             cursor.execute(_SQL)
             post_len = cursor.fetchall()
             return post_len[0][0]
-
-
-print(Storage.select_posts(0, 4))
