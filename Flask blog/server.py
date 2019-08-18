@@ -9,9 +9,6 @@ app.secret_key = 'any random string'
 
 
 def get_posts_from_to(page, page_size):
-    log_in_out = Markup("<a class='nav-link' href='/login'>Log in</a>")
-    if 'log_in' in session:
-        log_in_out = Markup("<a class='nav-link' href='/logout'>Log out</a>")
 
     li_home = Markup('<li class="nav-item" >')
     li_new_post = Markup('<li class="nav-item " >')
@@ -44,7 +41,7 @@ def get_posts_from_to(page, page_size):
     if not posts_from_to:
         return InputError.raise_error('No more posts to show')
 
-    return render_template('home.html', li_home=li_home, li_new_post=li_new_post, posts=posts, next=link_next, previous=link_previous, log=log_in_out)
+    return render_template('home.html', li_home=li_home, li_new_post=li_new_post, posts=posts, next=link_next, previous=link_previous)
 
 
 @app.route('/')

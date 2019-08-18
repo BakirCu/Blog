@@ -1,0 +1,14 @@
+version: '3'
+services:
+  python:
+    build: .
+    ports:
+      - "8080:5000"
+    depends_on:
+      - "db"
+  db:
+    image: "mysql"
+    volumes:
+      - ./blog_tabele:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: password
