@@ -2,20 +2,31 @@
 
 {% block body %}
 
+<link rel="stylesheet" href="/static/login.css">
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <!-- Tabs Titles -->
 
-<div class="container login-container">
-    <div class="row">
-        <div class="col-md-6 login-form-2">
-            <h3>Insert your email: </h3>
-            <form action="/login" method="post">
-                <div class="form-group">
-                    <input type=email name=username class="form-control" />
-                </div>
-                <div class="form-group">
-                    <input type="submit" class="btnSubmit" value="Login" />
-                </div>
-            </form>
+        <!-- Icon -->
+        <div class="fadeIn first">
+            <img src="https://www.w3schools.com/bootstrap4/img_avatar3.png" id="icon" alt="User Icon" />
         </div>
+
+        <!-- Login Form -->
+        <form action="/login" method="post">
+            <input type="text" id="login" class="fadeIn second" name="username" placeholder="username">
+            <input type="text" id="password" class="fadeIn third" name="password" placeholder="password">
+            <input type="submit" class="fadeIn fourth" value="Log In">
+        </form>
+
+        <!-- Remind Passowrd -->
+        <div id="formFooter">
+            <a class="underlineHover" href="#">Forgot Password?</a>
+        </div>
+
     </div>
 </div>
+
+
+
 {% endblock %}

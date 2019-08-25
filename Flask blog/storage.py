@@ -45,3 +45,25 @@ class Storage:
             cursor.execute(_SQL)
             post_len = cursor.fetchall()
             return post_len[0][0]
+
+    @staticmethod
+    def add_user(new_user):
+        with UseDatabase(Storage.config_dict) as cursor:
+            try:
+                _SQL = '''INSERT INTO blog.users(username, password)
+                        VALUES (%s, %s);'''
+                cursor.execute(_SQL, (new_user.username, new_user.password))
+            except mysql.connector.errors.IntegrityError:
+                raise MySQLError(
+                    'This  username is taken. Please chouse another username!')
+            except mysql.connector.errors.Error as err:
+                raise MySQLError(str(err))
+
+    @staticmethod
+    def select_user(username, password):
+        with UseDatabase(Storage.config_dict) as cursor:
+            _SQL = '''SELECT * FROM blog.users
+                            WHERE username = %s and password = %s'''
+            cursor.execute(_SQL, (username, password))
+            user = cursor.fetchall()
+            return user

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+
+
+
+
+
+
+
+</body>
+<link rel="stylesheet" href="/static/login.css">
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <!-- Tabs Titles -->
+
+        <!-- Icon -->
+        <div class="fadeIn first">
+            <img src="https://source.unsplash.com/WEQbe2jBg40/414x512" id="icon" alt="User Icon" />
+        </div>
+
+
+        <!-- Login Form -->
+        <form action="/user_added" method="post" class="needs-validation" novalidate>
+            <div class="form-group">
+                <input type="text" id="login" class="form-control" class="fadeIn second" name="username"
+                    placeholder="username" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <input type="text" id="password" class="form-control" class="fadeIn third" name="password"
+                    placeholder="password" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <input type="text" id="password" class="form-control" class="fadeIn third" name="confirm password"
+                    placeholder="confirm password" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <input type="submit" class="fadeIn fourth" value="Sing up">
+        </form>
+
+
+
+
+    </div>
+</div>
+<script>
+    // Disable form submissions if there are invalid fields
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            // Get the forms we want to add validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+{% endblock %}

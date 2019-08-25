@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, Markup, session, redirect, url_for
 from storage import Storage
-from post import PostTitle, Post
-from errors import InputError
+from post import PostCreate, Post
+from user import UserCreate
+from errors import InputError, MySQLError
 
 
 app = Flask(__name__)
@@ -63,7 +64,7 @@ def new_post():
 @app.route('/post_added', methods=['POST'])
 def post_added():
     try:
-        new_post = PostTitle.read_post(request)
+        new_post = PostCreate.read_post(request)
         Storage.add_post(new_post)
         return render_template('post_added.html',
                                title=new_post.title,
@@ -107,10 +108,37 @@ def page_not_found(err):
     return InputError.raise_error(str(err))
 
 
+@app.route("/singup")
+def singup():
+    return render_template('singup.html')
+
+
+@app.route('/user_added', methods=["GET", "POST"])
+def user_added():
+    try:
+        new_user = UserCreate.read_user(request)
+        Storage.add_user(new_user)
+    except InputError as err:
+        return InputError.raise_error(str(err))
+    except MySQLError as err:
+        return InputError.raise_error(str(err))
+    except Exception as err:
+        return InputError.raise_error(str(err))
+    return render_template('post_added.html',
+                           title=new_user.username,
+                           post='xxx')
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        session['log_in'] = request.form['username']
+        username = request.form['username']
+        password = request.form['password']
+        user_finded = Storage.select_user(username, password)
+        if not user_finded:
+            return InputError.raise_error("Check your username and password? If you don't have acount:Please SING UP!!!")
+
+        session['log_in'] = username
         return redirect(url_for('home'))
     return render_template('login.html')
 
@@ -121,4 +149,4 @@ def logout():
     return redirect(url_for('home'))
 
 
-app.run(debug=True)
+app.run(host='0.0.0.0', debug=True)
