@@ -125,8 +125,8 @@ def user_added():
     except Exception as err:
         return InputError.raise_error(str(err))
     return render_template('post_added.html',
-                           title=new_user.username,
-                           post='xxx')
+                           title='Welcome! you have signed up successfully. ',
+                           post=new_user.username)
 
 
 @app.route('/login', methods=['GET', 'POST'])
