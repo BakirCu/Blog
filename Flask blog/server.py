@@ -3,10 +3,20 @@ from storage import Storage
 from post import PostCreate, Post
 from user import UserCreate
 from errors import InputError, MySQLError
+from functools import wraps
 
 
 app = Flask(__name__)
 app.secret_key = 'any random string'
+
+
+def check_logged_in(func):
+    @wraps(func)
+    def omotac(*args, **kwargs):
+        if 'log_in' in session:
+            return func(*args, **kwargs)
+        return render_template('check_logged_in.html', value='logged out', user="please log in")
+    return omotac
 
 
 def get_posts_from_to(page, page_size):
@@ -51,14 +61,13 @@ def home():
 
 
 @app.route('/new_post')
+@check_logged_in
 def new_post():
 
     li_home = Markup('<li class="nav-item ">')
     li_new_post = Markup('<li class="nav-item active" >')
-    if 'log_in' in session:
-        name = session['log_in']
-        return render_template('new_post.html', li_home=li_home, li_new_post=li_new_post, name=name)
-    return redirect(url_for('login'))
+    name = session['log_in']
+    return render_template('new_post.html', li_home=li_home, li_new_post=li_new_post, name=name)
 
 
 @app.route('/post_added', methods=['POST'])
@@ -139,14 +148,20 @@ def login():
             return InputError.raise_error("Check your username and password? If you don't have acount:Please SING UP!!!")
 
         session['log_in'] = username
-        return redirect(url_for('home'))
+        return redirect(url_for('check_status'))
     return render_template('login.html')
 
 
 @app.route('/logout')
 def logout():
     session.pop('log_in', None)
-    return redirect(url_for('home'))
+    return redirect(url_for('check_status'))
+
+
+@app.route('/status')
+@check_logged_in
+def check_status():
+    return render_template('check_logged_in.html', value='logged in', user=session['log_in'])
 
 
 app.run(host='0.0.0.0', debug=True)
