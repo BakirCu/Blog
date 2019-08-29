@@ -6,7 +6,7 @@ class UserCreate:
         if not username or not password:
             raise InputError('Username and password must have some value')
         if password != comfpassword:
-            raise InputError("Passvord's didn't mach")
+            raise InputError("Password's didn't mach")
         self.username = username
         self.password = password
         self.comfpassword = comfpassword

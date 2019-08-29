@@ -43,5 +43,5 @@ def insertBLOB(title, post, image_path):
             print("MySQL connection is closed")
 
 
-insertBLOB('MILICA', 'jsjsjsjjs',
+insertBLOB('milica', 'jsjsjsjjs',
            "C:/Users/Bakir/Desktop/python/Flask blog/static/download.jpg")

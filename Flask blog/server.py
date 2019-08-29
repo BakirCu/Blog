@@ -4,7 +4,7 @@ from post import PostCreate, Post
 from user import UserCreate
 from errors import InputError, MySQLError
 from functools import wraps
-
+from base64 import b64encode
 
 app = Flask(__name__)
 app.secret_key = 'any random string'
@@ -45,9 +45,16 @@ def get_posts_from_to(page, page_size):
         (page-1)*page_size, page_size)
     # ovde pravim listu objekata, da bi posle mogao lepo da prikazem u for petlji
     posts = []
+
     for post in posts_from_to:
 
-        posts.append(Post(post[0], post[1], post[2], post[3]))
+        if not post[4]:
+            image = ''
+        else:
+            image = b64encode(post[4]).decode("utf-8")
+
+        posts.append(Post(post[0], post[1], post[2],
+                          post[3], image))
 
     if not posts_from_to:
         return InputError.raise_error('No more posts to show')

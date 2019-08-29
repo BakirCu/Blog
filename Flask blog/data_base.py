@@ -1,4 +1,4 @@
-import mysql.connector
+import pymysql
 
 
 class UseDatabase:
@@ -6,7 +6,7 @@ class UseDatabase:
         self.config = config
 
     def __enter__(self):
-        self.conn = mysql.connector.connect(**self.config)
+        self.conn = pymysql.connect(**self.config)
         self.cursor = self.conn.cursor()
         return self.cursor
 

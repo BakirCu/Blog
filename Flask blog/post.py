@@ -16,8 +16,9 @@ class PostCreate:
 
 
 class Post:
-    def __init__(self, title, date, id, post_content):
+    def __init__(self, title, date, id, post_content, image):
         self.title = title
         self.date = date
         self.id = id
         self.post_content = post_content
+        self.image = image

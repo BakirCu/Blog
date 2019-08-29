@@ -1,4 +1,4 @@
-import mysql.connector
+import pymysql
 from configuration import Configuration
 from data_base import UseDatabase
 from errors import MySQLError
@@ -15,7 +15,7 @@ class Storage:
                 _SQL = '''INSERT INTO blog.posts(title, post)
                         VALUES (%s, %s);'''
                 cursor.execute(_SQL, (new_post.title, new_post.post))
-            except mysql.connector.errors.Error as err:
+            except pymysql.errors.Error as err:
                 raise MySQLError(str(err))
 
     @staticmethod
@@ -53,10 +53,10 @@ class Storage:
                 _SQL = '''INSERT INTO blog.users(username, password)
                         VALUES (%s, %s);'''
                 cursor.execute(_SQL, (new_user.username, new_user.password))
-            except mysql.connector.errors.IntegrityError:
+            except pymysql.errors.IntegrityError:
                 raise MySQLError(
                     'This  username is taken. Please chouse another username!')
-            except mysql.connector.errors.Error as err:
+            except pymysql.errors.Error as err:
                 raise MySQLError(str(err))
 
     @staticmethod
