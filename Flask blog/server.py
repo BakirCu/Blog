@@ -1,10 +1,10 @@
-from flask import Flask, render_template, request, Markup, session, redirect, url_for
+from flask import Flask, render_template, request, Markup, session, redirect, url_for, send_file
 from storage import Storage
 from post import PostCreate, Post
 from user import UserCreate
 from errors import InputError, MySQLError
 from functools import wraps
-from base64 import b64encode
+
 
 app = Flask(__name__)
 app.secret_key = 'any random string'
@@ -51,7 +51,8 @@ def get_posts_from_to(page, page_size):
         if not post[4]:
             image = ''
         else:
-            image = b64encode(post[4]).decode("utf-8")
+            image = redirect(
+                url_for('slika', ime_slike=post[2]))
 
         posts.append(Post(post[0], post[1], post[2],
                           post[3], image))
@@ -67,10 +68,17 @@ def home():
     return get_posts_from_to(1, 7)
 
 
+@app.route('/images/<int:ime_slike>.jpg')
+def slika(ime_slike):
+    post = Storage.select_post(ime_slike)
+
+    bajtovi_iz_baze = post[4]
+    return send_file(bajtovi_iz_baze, attachment_filename='%s.jpg' % ime_slike, mimetype='image/jpg')
+
+
 @app.route('/new_post')
 @check_logged_in
 def new_post():
-
     li_home = Markup('<li class="nav-item ">')
     li_new_post = Markup('<li class="nav-item active" >')
     name = session['log_in']

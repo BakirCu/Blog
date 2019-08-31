@@ -45,7 +45,7 @@
     <img src="https://www.w3schools.com/bootstrap4/img_avatar3.png" alt="John Doe" class="mr-3 mt-3 rounded-circle"
         style="width:60px;">
     {%else%}
-    <img src="data:;base64,{{ post.image }}" alt="John Doe" class="mr-3 mt-3 rounded-circle" style="width:60px;">
+    <img src="/images/{{post.id}}.jpg" alt="John Doe" class="mr-3 mt-3 rounded-circle" style="width:60px;">
     {%endif%}
     <div class="media-body">
         <div class="text-center" id="accordion">
