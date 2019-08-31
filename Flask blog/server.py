@@ -73,7 +73,7 @@ def slika(ime_slike):
     post = Storage.select_post(ime_slike)
 
     bajtovi_iz_baze = post[4]
-    return send_file(bajtovi_iz_baze, attachment_filename='%s.jpg' % ime_slike, mimetype='image/jpg')
+    return send_file(bajtovi_iz_baze, attachment_filename='{}.jpg'.format(ime_slike), mimetype='image/jpg')
 
 
 @app.route('/new_post')
