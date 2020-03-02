@@ -23,8 +23,8 @@ class Storage:
         with UseDatabase(Storage.config_dict) as cursor:
             _SQL = '''SELECT * FROM blog.posts
                          ORDER by time_post DESC
-                         LIMIT %s,%s;'''
-            cursor.execute(_SQL, (page, page_size))
+                         LIMIT %s,%s'''
+            cursor.execute(_SQL, (page, page_size,))
             users = cursor.fetchall()
             return users
 

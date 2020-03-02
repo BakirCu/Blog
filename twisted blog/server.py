@@ -160,5 +160,5 @@ class MojSajt(resource.Resource):
 
 
 site = server.Site(MojSajt())
-reactor.listenTCP(8080, site)
+reactor.listenTCP(8000, site)
 reactor.run()
